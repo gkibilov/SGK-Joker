@@ -2,7 +2,7 @@ package com.sgk.joker.rest.model;
 
 import java.util.List;
 
-import com.sgk.joker.rest.Player;
+import com.sgk.joker.rest.model.Player;
 
 public class PlayerState {
 	

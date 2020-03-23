@@ -1,4 +1,4 @@
-package com.sgk.joker.rest;
+package com.sgk.joker.rest.model;
 
 import java.util.HashMap;
 

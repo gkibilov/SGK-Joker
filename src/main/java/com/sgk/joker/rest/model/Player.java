@@ -1,4 +1,4 @@
-package com.sgk.joker.rest;
+package com.sgk.joker.rest.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ public final class Player {
 
 	private String name;
 	
-	private int number;
+	private int position;
 	
 	private long id;
 	
@@ -27,7 +27,7 @@ public final class Player {
 	
 	public Player getOpponentCopy(Player p) {
 		
-		Player o = new Player(p.state, p.name, p.number, p.id);
+		Player o = new Player(p.state, p.name, p.position, p.id);
 
 		o.call = this.call;
 		o.taken = this.taken;
@@ -38,19 +38,19 @@ public final class Player {
 		return o;
 	}
 	
-	public Player(GameState state, String name, int number, long id) {
+	public Player(GameState state, String name, int position, long id) {
 		this.state = state;
 		this.name = name;
-		this.number = number;
+		this.position = position;
 		this.id = id;
 	}
 	
-	public int getNumber() {
-		return number;
+	public int getPosition() {
+		return position;
 	}
 	
-	public void setNumber(int number) {
-		this.number = number;
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
 	public String getName() {

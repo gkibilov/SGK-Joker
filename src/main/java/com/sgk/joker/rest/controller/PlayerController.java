@@ -1,4 +1,4 @@
-package com.sgk.joker.rest;
+package com.sgk.joker.rest.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sgk.joker.rest.model.CardSuite;
 import com.sgk.joker.rest.model.GameState;
 import com.sgk.joker.rest.model.PlayerState;
+import com.sgk.joker.rest.model.Status;
 
 @RestController
 public class PlayerController {
@@ -21,14 +22,15 @@ public class PlayerController {
 	@GetMapping("/startGame")
 	public PlayerState startGame(@RequestParam(value = "playerId") long playerId) {
 		if(!state.isValidPlayer(playerId)) {
-			return null;
+			throw new IllegalStateException("Not a valid player id!");
 		}
 		
 		synchronized(state) {
 			if (!state.isGameOn()) {
 				//TODO randomize seats numbers
-				state.assignCards();
 				state.setGameOn(true);
+				state.assignCards();
+				state.setStatus(Status.DEALT);
 			}
 		}
 		return state.getPlayerState(playerId);
@@ -43,6 +45,7 @@ public class PlayerController {
 	
 	@GetMapping("/getPlayersState")
 	public PlayerState getState(@RequestParam(value = "playerId") long playerId) {
+		
 		return state.getPlayerState(playerId);
 	}	
 	
@@ -51,7 +54,7 @@ public class PlayerController {
 	public PlayerState call(@RequestParam(value = "playerId") long playerId, 
 						   @RequestParam(value = "wantQty") int wantQty) {
 
-		//TODO: state.call(wantQty);
+		state.call(playerId, wantQty);
 		
 		return state.getPlayerState(playerId);
 	}
