@@ -11,7 +11,15 @@ import com.sgk.joker.rest.model.Player;
 
 public class GameState {
 	
-	private CardSuite kozyr = null;
+	int version = 0;
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
 	
 	private int roundNumber = 0;
 	
@@ -26,6 +34,16 @@ public class GameState {
 	//private List<Player> players = new ArrayList<Player>();
 	private Map<Long, Player> players = new HashMap<Long, Player>();
 	
+	private PlayState currentPlay = new PlayState();
+	
+	public PlayState getCurrentPlay() {
+		return currentPlay;
+	}
+
+	public void setCurrentPlay(PlayState currentPlay) {
+		this.currentPlay = currentPlay;
+	}
+
 	public int getCurrentTurnPosition() {
 		return currentTurnPosition;
 	}
@@ -63,13 +81,17 @@ public class GameState {
 	public void setRoundNumber(int roundNumber) {
 		this.roundNumber = roundNumber;
 	}
-	public CardSuite getKozyr() {
-		return kozyr;
+	
+	private CardSuite getKozyr() {
+		return currentPlay == null ? null : currentPlay.getKozyr();
 	}
+	
 	public void setKozyr(long playerId, CardSuite kozyr) {
 		if (players.get(playerId).getPosition() != actingPlayerPosition)
 			throw new IllegalStateException("Not your turn to call the suite!");
-		this.kozyr = kozyr;
+		this.currentPlay.setKozyr(kozyr);
+		
+		version++;
 	}
 
 	public boolean isGameOn() {
@@ -78,6 +100,9 @@ public class GameState {
 	public void setGameOn(boolean gameOn) {
 		if (gameOn && !canStartGame())
 			throw new IllegalStateException("Need all 4 players to start the game!"); 
+		
+		//reset;
+		roundNumber = 0;
 		this.status = Status.STARTED;
 	}
 
@@ -88,11 +113,12 @@ public class GameState {
 			if (p.getName().equalsIgnoreCase(name))
 				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
 		}
-		
-		
+				
 		long id = random.nextLong();
 		
 		players.put(id, new Player(this, name, players.size() + 1, id));
+		
+		version++;
 		
 		return id;
 	}
@@ -111,10 +137,12 @@ public class GameState {
 		
 		roundNumber++;
 		
+		currentPlay.reset();
+		
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
 		currentTurnPosition = actingPlayerPosition;
 		
-		kozyr = null;
+		this.currentPlay.setKozyr(null);
 		
 		int[] c = new int[36];
 		for (int i = 0; i<36; i++)
@@ -136,8 +164,10 @@ public class GameState {
 		
 		if(counter <= 33) {
 			Card kk = new Card(counter);
-			kozyr = kk.getSuite();
+			this.currentPlay.setKozyr(kk.getSuite());
 		}	
+		
+		version++;
 	}
 
 	private static Random random =  new Random();
@@ -198,13 +228,146 @@ public class GameState {
 			throw new IllegalStateException("Not this players turn to act!");
 		}
 		
-		players.get(playerId).setCall(wantQty);		
+		validateCall(playerId, wantQty);
+		
+		players.get(playerId).setCall(wantQty);	
+		players.get(playerId).setbWantsAll(wantQty == this.numCards);
 		
 		this.advanceCurrentTurnPosition();
 		
+		setCantCallNumberOnTheLastPlayer();
+		
+		//everyone made calls
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
 			status = Status.CALLS_MADE;
 		}
+		
+		version++;
+	}
+
+	private void setCantCallNumberOnTheLastPlayer() {
+		int lastPos = actingPlayerPosition == 1 ? 4 : (actingPlayerPosition + 3) %4;
+		int wants = 0;
+		Player lp = null;
+		for ( Player p : players.values()) {
+			if (p.getPosition() == lastPos) 
+				lp = p;
+			else
+				wants += p.getCall();
+		}
+		
+		lp.setCantCallNumer(this.numCards - wants);
+	}
+
+	private void validateCall(long playerId, int wantQty) {
+		if(wantQty < 0 || wantQty > numCards) {
+			throw new IllegalStateException("Please call between 0 and " + numCards);
+		}
+		
+		if (players.get(playerId).getCantCallNumer() != null && players.get(playerId).getCantCallNumer().equals(wantQty)) {
+			throw new IllegalStateException("Cant call "+wantQty);
+		}
+	}
+
+	public void action(long playerId, int cardId, JokerAction jokerAction) {
+		if(!isValidPlayer(playerId)) {
+			throw new IllegalStateException("Not a valid player id!");
+		}
+		
+		if (status != Status.CALLS_MADE || status != Status.PLAY_DONE) {
+			throw new IllegalStateException("To make a play app needs ot be in CALLS_MADE or PLAY_DONE status, current state is: " + status);
+		}
+		
+		if(!this.isPlayersTurn(playerId)) {		
+			throw new IllegalStateException("Not this players turn to act!");
+		}
+		
+		currentPlay.addAction(players.get(playerId).getPosition(), cardId, jokerAction);
+		
+		players.get(playerId).removeCard(cardId);
+		
+		status = Status.PLAY_STARTED;
+		
+		this.advanceCurrentTurnPosition();
+		
+		version++;		
+	}
+
+	public void react(long playerId, int cardId, JokerReaction jokerReaction) {
+		if(!isValidPlayer(playerId)) {
+			throw new IllegalStateException("Not a valid player id!");
+		}
+		
+		if (status != Status.PLAY_STARTED) {
+			throw new IllegalStateException("To make a reaction play app needs ot be in PLAY_STARTED status, current state is: " + status);
+		}
+		
+		if(!this.isPlayersTurn(playerId)) {		
+			throw new IllegalStateException("Not this players turn to act!");
+		}
+		
+		if (jokerReaction == null) {
+			validateReaction(playerId, cardId);
+		}
+		
+		currentPlay.addReaction(players.get(playerId).getPosition(), cardId, jokerReaction);
+		
+		players.get(playerId).removeCard(cardId);
+		
+		//everyone made their play
+		if(this.currentTurnPosition == this.actingPlayerPosition) {
+			calculatePlayResult();
+			status = Status.PLAY_DONE;
+		
+			//last card
+			if(players.get(playerId).getCards().isEmpty()) {
+				calculateHandResult();				
+				//game over
+				if(roundNumber == 24) {
+					status = Status.GAME_OVER;
+				}
+				else {
+					//deal next hand
+					assignCards();
+					status =Status.DEALT;
+				}
+			}
+		}
+		
+		version++;		
+	}
+
+	private void validateReaction(long playerId, int cardId) {
+	
+		Card rCard = Card.cardMap.get(cardId);
+		
+		CardSuite actingSuite = currentPlay.getActingSuite();
+		
+		if(actingSuite != rCard.suite) {
+			if(players.get(playerId).hasSuite(actingSuite)) {
+				throw new IllegalStateException("Please react with the acting suite, acting suite is: " + actingSuite);
+			} else if (currentPlay.getKozyr() != CardSuite.BEZ && rCard.suite != currentPlay.getKozyr() && players.get(playerId).hasSuite(currentPlay.getKozyr())) {
+				throw new IllegalStateException("Please react with kozyr!");				
+			}
+		}
+		else if (currentPlay.isJokerActionWant() && players.get(playerId).hasHigherSuiteCard(rCard)) {
+			throw new IllegalStateException("Please react with the highest card in sute: " + actingSuite);
+		}
+	}
+
+	private void calculatePlayResult() {
+		for (Player p : players.values()) {
+			if(p.getPosition() == currentPlay.getWinningAction().getPlayerPosition()) {
+				p.setTaken(p.getTaken()+1);
+				break;
+			}
+		}		
+	}
+	
+	private void calculateHandResult() {
+		for (Player p : players.values()) {
+			p.calculateHandResult();
+		}	
 	}
 
 }

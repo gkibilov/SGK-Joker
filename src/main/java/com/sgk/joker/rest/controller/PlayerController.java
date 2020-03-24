@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sgk.joker.rest.model.CardSuite;
 import com.sgk.joker.rest.model.GameState;
+import com.sgk.joker.rest.model.JokerAction;
+import com.sgk.joker.rest.model.JokerReaction;
 import com.sgk.joker.rest.model.PlayerState;
 import com.sgk.joker.rest.model.Status;
 
@@ -59,14 +61,12 @@ public class PlayerController {
 		return state.getPlayerState(playerId);
 	}
 	
-
-	
 	@GetMapping("/action")
 	public PlayerState action(@RequestParam(value = "playerId") long playerId, 
 						   @RequestParam(value = "cardId") int cardId, 
-						   @RequestParam(value = "jokerWantsSute", defaultValue ="0") int jws /*0-8*/) {
+						   @RequestParam(value = "jokerWantsSute", defaultValue ="0") JokerAction jokerAction /*0-7*/) {
 
-		//TODO: state.action();
+		state.action(playerId, cardId, jokerAction);
 		
 		return state.getPlayerState(playerId);
 	}
@@ -74,13 +74,9 @@ public class PlayerController {
 	@GetMapping("/reaction")
 	public PlayerState reaction(@RequestParam(value = "playerId") long playerId, 
 						   @RequestParam(value = "cardId") int cardId, 
-						   @RequestParam(value = "jokerWants", defaultValue ="1") int jw /*0-1*/) {
+						   @RequestParam(value = "jokerWantsSute", defaultValue ="1") JokerReaction jokerReaction /*0-1*/) {
 		
-		//TODO: state.react();
-		
-//		if (state.isLastMove()) {
-//			state.assignCards();
-//		}
+		 state.react(playerId, cardId, jokerReaction);
 
 		return state.getPlayerState(playerId);
 	}

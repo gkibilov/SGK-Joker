@@ -17,9 +17,20 @@ public final class Player {
 	
 	private List<Card> cards;
 	
-	private int call;
-	private int taken;
+	private Integer call;
+	private int taken = 0;
+	boolean bWantsAll = false;
 	
+	public boolean isbWantsAll() {
+		return bWantsAll;
+	}
+
+	public void setbWantsAll(boolean bWantsAll) {
+		this.bWantsAll = bWantsAll;
+	}
+
+	private Integer cantCallNumer;
+
 	private List<Integer> calls;
 	private List<Integer> scores;
 	
@@ -43,6 +54,14 @@ public final class Player {
 		this.name = name;
 		this.position = position;
 		this.id = id;
+	}
+	
+	public Integer getCantCallNumer() {
+		return cantCallNumer;
+	}
+
+	public void setCantCallNumer(Integer cantCallNumer) {
+		this.cantCallNumer = cantCallNumer;
 	}
 	
 	public int getPosition() {
@@ -70,7 +89,7 @@ public final class Player {
 	}
 
 	public List<Card> getCards() {
-		if (state.getNumCards() == 9 && state.getKozyr() == null)
+		if (state.getNumCards() == 9 && state.getCurrentPlay().getKozyr() == null)
 			return cards.subList(0, 3);
 		else	
 			return cards;
@@ -91,11 +110,11 @@ public final class Player {
 		cards.add(new Card(i));
 	}
 
-	public int getCall() {
+	public Integer getCall() {
 		return call;
 	}
 
-	public void setCall(int call) {
+	public void setCall(Integer call) {
 		this.call = call;
 	}
 
@@ -121,6 +140,66 @@ public final class Player {
 
 	public void setTotalScore(int totalScore) {
 		this.totalScore = totalScore;
+	}
+
+	public void removeCard(int cardId) {
+		int ri = 0;
+		for (Card c : cards) {
+			if (c.id == cardId) {
+				break;
+			}
+			ri++;
+		}
+		cards.remove(ri);
+	}
+
+	public boolean hasSuite(CardSuite suite) {
+		for (Card c : cards) {
+			if (c.suite == suite) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean hasHigherSuiteCard(Card rCard) {
+		for (Card c : cards) {
+			if (c.suite == rCard.suite  && c.id > rCard.id) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void calculateHandResult() {
+		int score = 0;
+		
+		//calculate
+		if (taken == call) {
+			if (isbWantsAll()) {
+				score = taken *100;
+			}
+			else {
+				score = call == 0 ? 50 : 100 + (taken -1) * 100;
+			}
+		}
+		else {
+			if (taken == 0)
+				score = -200;
+			else
+				score = taken *10;
+		}
+		
+		//update results
+		totalScore += score;
+		calls.add(call);
+		scores.add(score);
+		
+		//reset play 
+		taken = 0;
+		bWantsAll = false;
+		call = null;
+		cantCallNumer = null;
 	}
 		
 }
