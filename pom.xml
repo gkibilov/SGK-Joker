@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>sgk.joker</groupId>
 	<artifactId>sgk-joker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>sgk-joker</name>
 	<description>Spring Boot SGK Joker</description>
 

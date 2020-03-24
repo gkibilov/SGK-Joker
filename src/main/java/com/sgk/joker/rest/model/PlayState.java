@@ -33,6 +33,8 @@ public class PlayState {
 
 	public void reset() {
 		actions.clear();
+		winningAction = null;
+		kozyr = null;
 	}
 
 	public void addAction(int position, int cardId, JokerAction jokerAction) {
@@ -46,11 +48,15 @@ public class PlayState {
 	}
 
 	public CardSuite getActingSuite() {
-		return actions.get(0).getActingSuite();
+		return actions.isEmpty() ? null : actions.get(0).getActingSuite();
 	}
 	
 	public boolean isJokerActionWant() {
-		 return actions.get(0).isJokerActionWant();
+		 return actions.isEmpty() ? false : actions.get(0).isJokerActionWant();
+	}
+	
+	public boolean isJokerActionTake() {
+		 return actions.isEmpty() ? false : actions.get(0).isJokerActionTake();
 	}
 	
 	private void calculateWinningAction() {

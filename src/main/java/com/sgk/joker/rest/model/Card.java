@@ -34,27 +34,27 @@ public class Card {
 		cardMap.put(17, new Card(17, CardSuite.SPADE, CardType.TEN));
 		cardMap.put(18, new Card(18, CardSuite.CLUB, CardType.TEN));
 		cardMap.put(19, new Card(19, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(20, new Card(20, CardSuite.CLUB, CardType.TEN));
+		cardMap.put(20, new Card(20, CardSuite.HART, CardType.TEN));
 		//6
-		cardMap.put(21, new Card(21, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(22, new Card(22, CardSuite.HART, CardType.TEN));			
-		cardMap.put(23, new Card(23, CardSuite.SPADE, CardType.TEN));
-		cardMap.put(24, new Card(24, CardSuite.CLUB, CardType.TEN));
+		cardMap.put(21, new Card(21, CardSuite.SPADE, CardType.JACK));
+		cardMap.put(22, new Card(22, CardSuite.CLUB, CardType.JACK));			
+		cardMap.put(23, new Card(23, CardSuite.DIAMOND, CardType.JACK));
+		cardMap.put(24, new Card(24, CardSuite.HART, CardType.JACK));
 		//7
-		cardMap.put(25, new Card(25, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(26, new Card(26, CardSuite.HART, CardType.TEN));			
-		cardMap.put(27, new Card(27, CardSuite.SPADE, CardType.TEN));
-		cardMap.put(28, new Card(28, CardSuite.CLUB, CardType.TEN));
+		cardMap.put(25, new Card(25, CardSuite.SPADE, CardType.QUEEN));
+		cardMap.put(26, new Card(26, CardSuite.CLUB, CardType.QUEEN));			
+		cardMap.put(27, new Card(27, CardSuite.DIAMOND, CardType.QUEEN));
+		cardMap.put(28, new Card(28, CardSuite.HART, CardType.QUEEN));
 		//8
-		cardMap.put(29, new Card(29, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(30, new Card(30, CardSuite.HART, CardType.TEN));		
-		cardMap.put(31, new Card(31, CardSuite.SPADE, CardType.TEN));
-		cardMap.put(32, new Card(32, CardSuite.CLUB, CardType.TEN));
+		cardMap.put(29, new Card(29, CardSuite.SPADE, CardType.KING));
+		cardMap.put(30, new Card(30, CardSuite.CLUB, CardType.KING));		
+		cardMap.put(31, new Card(31, CardSuite.DIAMOND, CardType.KING));
+		cardMap.put(32, new Card(32, CardSuite.HART, CardType.KING));
 		//9
-		cardMap.put(33, new Card(33, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(34, new Card(34, CardSuite.HART, CardType.TEN));					
-		cardMap.put(35, new Card(35, CardSuite.DIAMOND, CardType.TEN));
-		cardMap.put(36, new Card(36, CardSuite.HART, CardType.TEN));			
+		cardMap.put(33, new Card(33, CardSuite.SPADE, CardType.ACE));
+		cardMap.put(34, new Card(34, CardSuite.CLUB, CardType.ACE));					
+		cardMap.put(35, new Card(35, CardSuite.DIAMOND, CardType.ACE));
+		cardMap.put(36, new Card(36, CardSuite.HART, CardType.ACE));			
 	};
 	
 	
@@ -74,7 +74,14 @@ public class Card {
 		this.type = cardMap.get(id).getType();
 	}
 	
-	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public CardSuite getSuite() {
 		return suite;
 	}

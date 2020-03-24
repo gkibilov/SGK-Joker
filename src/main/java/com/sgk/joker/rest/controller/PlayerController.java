@@ -40,8 +40,8 @@ public class PlayerController {
 	
 	@GetMapping("/setKozyr")
 	public PlayerState setKozyr(@RequestParam(value = "playerId") long playerId, 
-						   @RequestParam(value = "cardId") CardSuite suite) {
-		state.setKozyr(playerId, suite);
+								@RequestParam(value = "kozyrSuite") CardSuite kozyrSuite) {
+		state.setKozyr(playerId, kozyrSuite);
 		return state.getPlayerState(playerId);
 	}
 	
@@ -63,8 +63,8 @@ public class PlayerController {
 	
 	@GetMapping("/action")
 	public PlayerState action(@RequestParam(value = "playerId") long playerId, 
-						   @RequestParam(value = "cardId") int cardId, 
-						   @RequestParam(value = "jokerWantsSute", defaultValue ="0") JokerAction jokerAction /*0-7*/) {
+							  @RequestParam(value = "cardId") int cardId, 
+							  @RequestParam(value = "jokerAction", required = false) JokerAction jokerAction /*0-7*/) {
 
 		state.action(playerId, cardId, jokerAction);
 		
@@ -73,8 +73,8 @@ public class PlayerController {
 	
 	@GetMapping("/reaction")
 	public PlayerState reaction(@RequestParam(value = "playerId") long playerId, 
-						   @RequestParam(value = "cardId") int cardId, 
-						   @RequestParam(value = "jokerWantsSute", defaultValue ="1") JokerReaction jokerReaction /*0-1*/) {
+						   		@RequestParam(value = "cardId") int cardId, 
+						   		@RequestParam(value = "jokerReaction", required = false) JokerReaction jokerReaction /*0-1*/) {
 		
 		 state.react(playerId, cardId, jokerReaction);
 

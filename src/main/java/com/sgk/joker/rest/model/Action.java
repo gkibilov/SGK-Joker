@@ -50,7 +50,7 @@ public class Action {
 		this.jokerAction = jokerAction;
 	}
 	
-	public CardSuite getActingSuite() {
+    protected CardSuite getActingSuite() {
 
 		CardSuite res = null;
 		
@@ -81,7 +81,7 @@ public class Action {
 		return res;
 	}
 	
-	public boolean isJokerActionWant() {
+	protected boolean isJokerActionWant() {
 		if (jokerAction != null) {
 			switch (jokerAction) {
 			case WANT_HART:

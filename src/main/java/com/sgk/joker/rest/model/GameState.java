@@ -125,7 +125,7 @@ public class GameState {
 	
 	private void advanceCurrentTurnPosition() {
 		currentTurnPosition++;
-		if(currentTurnPosition == 4)
+		if(currentTurnPosition > 4)
 			currentTurnPosition = 1;
 	}
 	
@@ -185,6 +185,9 @@ public class GameState {
 	}
 	
 	public PlayerState getPlayerState(long id) {
+		if(!isValidPlayer(id)) {
+			throw new IllegalStateException("Not a valid player id!");
+		}
 		return new PlayerState (players.get(id), this);
 	}
 	public List<Player> getOpponents(long id) {
@@ -232,10 +235,10 @@ public class GameState {
 		
 		players.get(playerId).setCall(wantQty);	
 		players.get(playerId).setbWantsAll(wantQty == this.numCards);
+			
+		setCantCallNumberOnTheLastPlayer();
 		
 		this.advanceCurrentTurnPosition();
-		
-		setCantCallNumberOnTheLastPlayer();
 		
 		//everyone made calls
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
@@ -252,7 +255,7 @@ public class GameState {
 		for ( Player p : players.values()) {
 			if (p.getPosition() == lastPos) 
 				lp = p;
-			else
+			else if (p.getCall() != null)
 				wants += p.getCall();
 		}
 		
@@ -274,7 +277,7 @@ public class GameState {
 			throw new IllegalStateException("Not a valid player id!");
 		}
 		
-		if (status != Status.CALLS_MADE || status != Status.PLAY_DONE) {
+		if (status != Status.CALLS_MADE && status != Status.PLAY_DONE) {
 			throw new IllegalStateException("To make a play app needs ot be in CALLS_MADE or PLAY_DONE status, current state is: " + status);
 		}
 		
@@ -282,9 +285,14 @@ public class GameState {
 			throw new IllegalStateException("Not this players turn to act!");
 		}
 		
-		currentPlay.addAction(players.get(playerId).getPosition(), cardId, jokerAction);
+		//ignore bogus joker actions
+		if(jokerAction != null && cardId > 1) {		
+			jokerAction = null;
+		}
 		
 		players.get(playerId).removeCard(cardId);
+		
+		currentPlay.addAction(players.get(playerId).getPosition(), cardId, jokerAction);
 		
 		status = Status.PLAY_STARTED;
 		
@@ -306,23 +314,30 @@ public class GameState {
 			throw new IllegalStateException("Not this players turn to act!");
 		}
 		
-		if (jokerReaction == null) {
-			validateReaction(playerId, cardId);
+		//ignore bogus joker reaction
+		if(jokerReaction != null && cardId > 1) {		
+			jokerReaction = null;
 		}
 		
-		currentPlay.addReaction(players.get(playerId).getPosition(), cardId, jokerReaction);
+		if (jokerReaction == null) {
+			validateReaction(playerId, cardId);
+		}		
 		
 		players.get(playerId).removeCard(cardId);
 		
-		//everyone made their play
+		currentPlay.addReaction(players.get(playerId).getPosition(), cardId, jokerReaction);
+		
+		this.advanceCurrentTurnPosition();
+		
+		//everyone made their play?
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
 			calculatePlayResult();
 			status = Status.PLAY_DONE;
 		
-			//last card
+			//hand is over?
 			if(players.get(playerId).getCards().isEmpty()) {
 				calculateHandResult();				
-				//game over
+				//game over?
 				if(roundNumber == 24) {
 					status = Status.GAME_OVER;
 				}

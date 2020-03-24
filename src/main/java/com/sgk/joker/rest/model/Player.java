@@ -13,13 +13,19 @@ public final class Player {
 	
 	private int position;
 	
-	private long id;
+	private Long id;
 	
 	private List<Card> cards;
 	
+	boolean bWantsAll = false;	
+	private Integer cantCallNumer;
+	
 	private Integer call;
 	private int taken = 0;
-	boolean bWantsAll = false;
+	
+	private List<Integer> calls = new ArrayList<Integer>();	
+	private List<Integer> scores = new ArrayList<Integer>();	
+	int totalScore;
 	
 	public boolean isbWantsAll() {
 		return bWantsAll;
@@ -29,27 +35,31 @@ public final class Player {
 		this.bWantsAll = bWantsAll;
 	}
 
-	private Integer cantCallNumer;
+	public List<Integer> getCalls() {
+		return calls;
+	}
 
-	private List<Integer> calls;
-	private List<Integer> scores;
-	
-	int totalScore;
+	public void setCalls(List<Integer> calls) {
+		this.calls = calls;
+	}
+
 	
 	public Player getOpponentCopy(Player p) {
 		
-		Player o = new Player(p.state, p.name, p.position, p.id);
+		Player o = new Player(p.state, p.name, p.position, null);
 
 		o.call = this.call;
 		o.taken = this.taken;
 		o.calls = this.calls;
 		o.scores = this.scores;
 		o.totalScore = this.totalScore;
+		o.cantCallNumer = this.cantCallNumer;
+		o.bWantsAll = this.bWantsAll;
 		
 		return o;
 	}
 	
-	public Player(GameState state, String name, int position, long id) {
+	public Player(GameState state, String name, int position, Long id) {
 		this.state = state;
 		this.name = name;
 		this.position = position;
@@ -80,11 +90,11 @@ public final class Player {
 		this.name = name;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -144,11 +154,17 @@ public final class Player {
 
 	public void removeCard(int cardId) {
 		int ri = 0;
+		boolean bFound = false;
 		for (Card c : cards) {
 			if (c.id == cardId) {
+				bFound = true;
 				break;
 			}
 			ri++;
+		}
+		
+		if(!bFound) {
+			throw new IllegalStateException("Player doesnt have such card!");
 		}
 		cards.remove(ri);
 	}
@@ -175,12 +191,12 @@ public final class Player {
 		int score = 0;
 		
 		//calculate
-		if (taken == call) {
+		if (call.equals(taken)) {
 			if (isbWantsAll()) {
 				score = taken *100;
 			}
 			else {
-				score = call == 0 ? 50 : 100 + (taken -1) * 100;
+				score = call == 0 ? 50 : 100 + (taken -1) * 50;
 			}
 		}
 		else {
