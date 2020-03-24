@@ -1,5 +1,6 @@
 package com.sgk.joker.rest.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,11 +12,18 @@ import com.sgk.joker.rest.model.JokerReaction;
 import com.sgk.joker.rest.model.PlayerState;
 import com.sgk.joker.rest.model.Status;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 public class PlayerController {
 	
 	static private GameState state = new GameState();
 
+	@GetMapping("/newTable")
+	public Long newTable(@RequestParam(value = "name") String name) {
+		state.reset(name);
+		return state.getTableId();
+	}
+	
 	@GetMapping("/addPlayer")
 	public PlayerState addPlayer(@RequestParam(value = "name") String name) {
 		return state.getPlayerState(state.addPlayer(name));

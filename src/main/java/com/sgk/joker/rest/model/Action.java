@@ -116,4 +116,8 @@ public class Action {
 		return Card.cardMap.get(this.getCardId()).getSuite();
 	}
 	
+	public CardType getType() {
+		return Card.cardMap.get(this.getCardId()).getType();
+	}
+	
 }

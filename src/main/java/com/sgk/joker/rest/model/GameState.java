@@ -13,13 +13,8 @@ public class GameState {
 	
 	int version = 0;
 	
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
+	private long tableId;
+	private String tableName;
 	
 	private int roundNumber = 0;
 	
@@ -35,6 +30,30 @@ public class GameState {
 	private Map<Long, Player> players = new HashMap<Long, Player>();
 	
 	private PlayState currentPlay = new PlayState();
+	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+	
+	public long getTableId() {
+		return tableId;
+	}
+
+	public void setTableId(long tableId) {
+		this.tableId = tableId;
+	}
+
+	public String getTableName() {
+		return tableName;
+	}
+
+	public void setTableName(String tableName) {
+		this.tableName = tableName;
+	}
 	
 	public PlayState getCurrentPlay() {
 		return currentPlay;
@@ -93,16 +112,33 @@ public class GameState {
 		
 		version++;
 	}
+	
+	public void reset(String tableName) {
+		roundNumber = 0;
+		
+		this.status = Status.NOT_STARTED;
+		
+		//full reset
+		if(tableName != null) {
+			players.clear();
+		}
+		else {
+			for (Player p : players.values()) {
+				p.reset();
+			}
+		}
+	}
 
 	public boolean isGameOn() {
-		return !status.equals(Status.NOT_STARTED) || status.equals(Status.GAME_OVER);
+		return !status.equals(Status.NOT_STARTED) && !status.equals(Status.GAME_OVER);
 	}
 	public void setGameOn(boolean gameOn) {
 		if (gameOn && !canStartGame())
 			throw new IllegalStateException("Need all 4 players to start the game!"); 
 		
-		//reset;
-		roundNumber = 0;
+		//do not remove players
+		reset(null);
+
 		this.status = Status.STARTED;
 	}
 

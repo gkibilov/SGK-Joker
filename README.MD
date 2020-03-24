@@ -1,5 +1,8 @@
 
 Request Examples:
+
+http://localhost:8080/newTable?name=MyTable1 - removes players from the table so you can re-seat them, returns room id, not used yet
+
 http://localhost:8080/addPlayer?name=P1 - need to add 4 players before startGame succeeds
 
 http://localhost:8080/startGame?playerId=-2754113531719643820   -  can be called by any and all players, will start only once, subsequent calls will act as getPlayersState
@@ -23,7 +26,140 @@ After 3rd  player called/"daidzakhes":
 {"state":{"version":8,"roundNumber":1,"numCards":1,"actingPlayerPosition":1,"currentTurnPosition":4,"status":"DEALT","currentPlay":{"kozyr":"HART","actions":[],"winningAction":null,"actingSuite":null,"jokerActionWant":false,"jokerActionTake":false},"gameOn":true},"player":{"name":"P3","position":3,"id":-6957350532758079508,"cards":[{"id":30,"suite":"CLUB","type":"KING"}],"bWantsAll":false,"cantCallNumer":null,"call":0,"taken":0,"calls":[],"scores":[],"totalScore":0},"opponents":[{"name":"P2","position":2,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":0,"taken":0,"calls":[],"scores":[],"totalScore":0},{"name":"P4","position":4,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":0,"call":null,"taken":0,"calls":[],"scores":[],"totalScore":0},{"name":"P1","position":1,"id":null,"cards":null,"bWantsAll":true,"cantCallNumer":null,"call":1,"taken":0,"calls":[],"scores":[],"totalScore":0}]}
 
 After 3 players acted/"iares", this is state from 4th players view:
-{"state":{"version":12,"roundNumber":1,"numCards":1,"actingPlayerPosition":1,"currentTurnPosition":4,"status":"PLAY_STARTED","currentPlay":{"kozyr":"HART","actions":[{"cardId":16,"jokerAction":null,"jokerReaction":null,"playerPosition":1,"suite":"HART","jokerActionTake":false},{"cardId":12,"jokerAction":null,"jokerReaction":null,"playerPosition":2,"suite":"HART","jokerActionTake":false},{"cardId":30,"jokerAction":null,"jokerReaction":null,"playerPosition":3,"suite":"CLUB","jokerActionTake":false}],"winningAction":{"cardId":16,"jokerAction":null,"jokerReaction":null,"playerPosition":1,"suite":"HART","jokerActionTake":false},"actingSuite":"HART","jokerActionWant":false,"jokerActionTake":false},"gameOn":true},"player":{"name":"P4","position":4,"id":8755545805337593630,"cards":[{"id":32,"suite":"HART","type":"KING"}],"bWantsAll":true,"cantCallNumer":0,"call":1,"taken":0,"calls":[],"scores":[],"totalScore":0},"opponents":[{"name":"P2","position":2,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":0,"taken":0,"calls":[],"scores":[],"totalScore":0},{"name":"P3","position":3,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":0,"taken":0,"calls":[],"scores":[],"totalScore":0},{"name":"P1","position":1,"id":null,"cards":null,"bWantsAll":true,"cantCallNumer":null,"call":1,"taken":0,"calls":[],"scores":[],"totalScore":0}]}
+{
+   "state":{
+      "version":12,
+      "roundNumber":1,
+      "numCards":1,
+      "actingPlayerPosition":1,
+      "currentTurnPosition":4,
+      "status":"PLAY_STARTED",
+      "currentPlay":{
+         "kozyr":"HART",
+         "actions":[
+            {
+               "cardId":16,
+               "jokerAction":null,
+               "jokerReaction":null,
+               "playerPosition":1,
+               "suite":"HART",
+               "type" :"NINE",
+               "jokerActionTake":false
+            },
+            {
+               "cardId":12,
+               "jokerAction":null,
+               "jokerReaction":null,
+               "playerPosition":2,
+               "suite":"HART",
+               "type" :"EIGHT",
+               "jokerActionTake":false
+            },
+            {
+               "cardId":30,
+               "jokerAction":null,
+               "jokerReaction":null,
+               "playerPosition":3,
+               "suite":"CLUB",
+               "type" :"KING",
+               "jokerActionTake":false
+            }
+         ],
+         "winningAction":{
+            "cardId":16,
+            "jokerAction":null,
+            "jokerReaction":null,
+            "playerPosition":1,
+            "suite":"HART",
+            "type" :"NINE",
+            "jokerActionTake":false
+         },
+         "actingSuite":"HART",
+         "jokerActionWant":false,
+         "jokerActionTake":false
+      },
+      "gameOn":true
+   },
+   "player":{
+      "name":"P4",
+      "position":4,
+      "id":8755545805337593630,
+      "cards":[
+         {
+            "id":32,
+            "suite":"HART",
+            "type":"KING"
+         }
+      ],
+      "bWantsAll":true,
+      "cantCallNumer":0,
+      "call":1,
+      "taken":0,
+      "calls":[
+
+      ],
+      "scores":[
+
+      ],
+      "totalScore":0
+   },
+   "opponents":[
+      {
+         "name":"P2",
+         "position":2,
+         "id":null,
+         "cards":null,
+         "bWantsAll":false,
+         "cantCallNumer":null,
+         "call":0,
+         "taken":0,
+         "calls":[
+
+         ],
+         "scores":[
+
+         ],
+         "totalScore":0
+      },
+      {
+         "name":"P3",
+         "position":3,
+         "id":null,
+         "cards":null,
+         "bWantsAll":false,
+         "cantCallNumer":null,
+         "call":0,
+         "taken":0,
+         "calls":[
+
+         ],
+         "scores":[
+
+         ],
+         "totalScore":0
+      },
+      {
+         "name":"P1",
+         "position":1,
+         "id":null,
+         "cards":null,
+         "bWantsAll":true,
+         "cantCallNumer":null,
+         "call":1,
+         "taken":0,
+         "calls":[
+
+         ],
+         "scores":[
+
+         ],
+         "totalScore":0
+      }
+   ]
+}
+
+
+
 
 After 4th player acted:
 {"state":{"version":14,"roundNumber":2,"numCards":2,"actingPlayerPosition":2,"currentTurnPosition":2,"status":"DEALT","currentPlay":{"kozyr":"HART","actions":[],"winningAction":null,"actingSuite":null,"jokerActionWant":false,"jokerActionTake":false},"gameOn":true},"player":{"name":"P4","position":4,"id":8755545805337593630,"cards":[{"id":33,"suite":"SPADE","type":"ACE"},{"id":14,"suite":"CLUB","type":"NINE"}],"bWantsAll":false,"cantCallNumer":null,"call":null,"taken":0,"calls":[1],"scores":[100],"totalScore":100},"opponents":[{"name":"P2","position":2,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":null,"taken":0,"calls":[0],"scores":[50],"totalScore":50},{"name":"P3","position":3,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":null,"taken":0,"calls":[0],"scores":[50],"totalScore":50},{"name":"P1","position":1,"id":null,"cards":null,"bWantsAll":false,"cantCallNumer":null,"call":null,"taken":0,"calls":[1],"scores":[-200],"totalScore":-200}]}

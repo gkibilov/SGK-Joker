@@ -25,6 +25,8 @@ public final class Player {
 	
 	private List<Integer> calls = new ArrayList<Integer>();	
 	private List<Integer> scores = new ArrayList<Integer>();	
+	private List<Integer> bonusMultiplier = new ArrayList<Integer>();	
+
 	int totalScore;
 	
 	public boolean isbWantsAll() {
@@ -42,6 +44,26 @@ public final class Player {
 	public void setCalls(List<Integer> calls) {
 		this.calls = calls;
 	}
+	
+	public List<Integer> getBonusMultiplier() {
+		return bonusMultiplier;
+	}
+
+	public void setBonusMultiplier(List<Integer> bonusMultiplier) {
+		this.bonusMultiplier = bonusMultiplier;
+	}
+	
+	public void reset() {
+		
+		this.call = null;
+		this.taken = 0;
+		this.calls.clear();
+		this.scores.clear();
+		this.totalScore = 0;
+		this.cantCallNumer = null;
+		this.bWantsAll = false;
+		this.bonusMultiplier.clear();
+	}
 
 	
 	public Player getOpponentCopy(Player p) {
@@ -55,6 +77,7 @@ public final class Player {
 		o.totalScore = this.totalScore;
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
+		o.bonusMultiplier = this.bonusMultiplier;
 		
 		return o;
 	}
@@ -211,11 +234,31 @@ public final class Player {
 		calls.add(call);
 		scores.add(score);
 		
+		//calculate bonuses
+		calculateBonuses();
+		if (calls.size() == 4) {
+			
+		}
+		else if (calls.size() == 12) {
+		
+		}
+		else if (calls.size() == 20) {
+			
+		}
+		else if (calls.size() == 24) {
+			
+		}
+		
 		//reset play 
 		taken = 0;
 		bWantsAll = false;
 		call = null;
 		cantCallNumer = null;
+	}
+
+	private void calculateBonuses() {
+		// TODO Auto-generated method stub
+		
 	}
 		
 }
