@@ -391,6 +391,7 @@ public class GameState {
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
 			calculatePlayResult();
 			status = Status.PLAY_DONE;
+			this.currentPlay.getActions().clear();
 		
 			//hand is over?
 			if(players.get(playerId).getCards().isEmpty()) {
