@@ -26,7 +26,7 @@ public final class Player {
 	private List<Integer> takes = new ArrayList<Integer>();	
 	private List<Integer> calls = new ArrayList<Integer>();	
 	private List<Integer> scores = new ArrayList<Integer>();	
-	private List<Integer> bonusMultiplier = new ArrayList<Integer>();	
+	private List<Integer> bonusMultipliers = new ArrayList<Integer>();	
 
 	int totalScore = 0;
 	int totalScoreWithBonuses = 0;
@@ -47,12 +47,12 @@ public final class Player {
 		this.calls = calls;
 	}
 	
-	public List<Integer> getBonusMultiplier() {
-		return bonusMultiplier;
+	public List<Integer> getBonusMultipliers() {
+		return bonusMultipliers;
 	}
 
-	public void setBonusMultiplier(List<Integer> bonusMultiplier) {
-		this.bonusMultiplier = bonusMultiplier;
+	public void setBonusMultipliers(List<Integer> bonusMultipliers) {
+		this.bonusMultipliers = bonusMultipliers;
 	}
 	
 	public void reset() {
@@ -65,7 +65,7 @@ public final class Player {
 		this.totalScoreWithBonuses = 0;
 		this.cantCallNumer = null;
 		this.bWantsAll = false;
-		this.bonusMultiplier.clear();
+		this.bonusMultipliers.clear();
 	}
 
 	
@@ -82,7 +82,7 @@ public final class Player {
 		o.totalScoreWithBonuses = this.totalScoreWithBonuses;
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
-		o.bonusMultiplier = this.bonusMultiplier;
+		o.bonusMultipliers = this.bonusMultipliers;
 		
 		return o;
 	}
@@ -248,7 +248,7 @@ public final class Player {
 			totalScore = totalScoreWithBonuses + calculateBonuses(4);
 			totalScoreWithBonuses = totalScore;
 		}
-		//else uncomment when done
+		else
 			totalScore += score;
 		
 		//reset play 
@@ -258,30 +258,47 @@ public final class Player {
 		cantCallNumer = null;
 	}
 	
-	protected static boolean isBonusRoundForPlayer(Player p) {
-		
-		int n = 0;
-		
-		if (p.calls.size() == 4 || p.calls.size() == 20) {
-			n=8;
-		}
-		else if (p.calls.size() == 12 || p.calls.size() == 24) {
-			n=4;
-		}
-		
-		for (int i = p.calls.size(); i > p.calls.size() - n; i--) {
-			if(p.calls.get(i-1) != p.takes.get(i-1))
+	protected static boolean isBonusRoundForPlayer(Player p, int n) {		
+		for (int i = p.calls.size()-1; i >= p.calls.size()-n; i--) {
+			if(p.calls.get(i) != p.takes.get(i))
 				return false;
 		}
-		
 		return true;
 	}
 
 	private int calculateBonuses(int n) {
 		int score = 0;
 		//populate
-		//bonusMultiplier = 
+		bonusMultipliers.add(1);
 		
+		int bonusMultiplier = 1;
+		//bonus
+		if (Player.isBonusRoundForPlayer(this, n)) 
+			bonusMultiplier = 2;
+		//remove highest score 
+		else if (state.getNumOfBonusesThisRound(n) == 1)
+			bonusMultiplier = 0;
+		
+		//find highest score index for bonus and fill up bonusMultipliers with 1s
+		int highScoreIndex = 0;
+		int highestScore = 0;
+		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
+			bonusMultipliers.add(1);
+			if (i == scores.size()-1)
+				continue;
+			if(scores.get(i) >= highestScore) {
+				highScoreIndex = i;
+				highestScore = scores.get(i);
+			}
+		}
+		
+		//set bonusMultiplier
+		bonusMultipliers.set(highScoreIndex, bonusMultiplier);
+		
+		//apply bonusMultiplier
+		for (int i = scores.size()-1; i > scores.size()-n; i--) {
+			score += scores.get(i)*bonusMultipliers.get(i);
+		}
 		return score;
 	}
 		

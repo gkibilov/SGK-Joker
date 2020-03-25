@@ -443,10 +443,10 @@ public class GameState {
 		}	
 	}
 	
-	protected int NumOfBonusesThisRound() {
+	protected int getNumOfBonusesThisRound(int n) {
 		int numBonuses = 0;
 		for (Player p : players.values()) {
-			if (Player.isBonusRoundForPlayer(p))
+			if (Player.isBonusRoundForPlayer(p, n))
 				numBonuses++;
 		}	
 		return numBonuses;
