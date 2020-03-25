@@ -279,27 +279,32 @@ public final class Player {
 		else if (state.getNumOfBonusesThisRound(n) == 1)
 			bonusMultiplier = 0;
 		
-		//find highest score index for bonus and fill up bonusMultipliers with 1s
-		int highScoreIndex = 0;
-		int highestScore = 0;
+		//fill up bonusMultipliers with 1s, count -200s, find highest score index for bonus, 
+		int khishtcounter = 0;
+		int highScoreIndex = -1;
+		int highestMadeScore = 100;//only consider made hands
 		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
 			bonusMultipliers.add(1);
+			if (scores.get(i) == 0) 
+				khishtcounter++;
 			if (i == scores.size()-1)
 				continue;
-			if(scores.get(i) >= highestScore) {
+			if(scores.get(i) >= highestMadeScore) {
 				highScoreIndex = i;
-				highestScore = scores.get(i);
+				highestMadeScore = scores.get(i);
 			}
 		}
 		
 		//set bonusMultiplier
-		bonusMultipliers.set(highScoreIndex, bonusMultiplier);
+		if(highScoreIndex >=0)
+			bonusMultipliers.set(highScoreIndex, bonusMultiplier);
 		
 		//apply bonusMultiplier
 		for (int i = scores.size()-1; i > scores.size()-n; i--) {
 			score += scores.get(i)*bonusMultipliers.get(i);
 		}
-		return score;
+		
+		return score - khishtcounter*200;
 	}
 		
 }
