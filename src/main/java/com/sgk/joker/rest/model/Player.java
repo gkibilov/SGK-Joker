@@ -13,7 +13,7 @@ public final class Player {
 	
 	private int position;
 	
-	private Long id;
+	private String id;
 	
 	private List<Card> cards;
 	
@@ -23,11 +23,13 @@ public final class Player {
 	private Integer call;
 	private int taken = 0;
 	
+	private List<Integer> takes = new ArrayList<Integer>();	
 	private List<Integer> calls = new ArrayList<Integer>();	
 	private List<Integer> scores = new ArrayList<Integer>();	
 	private List<Integer> bonusMultiplier = new ArrayList<Integer>();	
 
-	int totalScore;
+	int totalScore = 0;
+	int totalScoreWithBonuses = 0;
 	
 	public boolean isbWantsAll() {
 		return bWantsAll;
@@ -54,12 +56,13 @@ public final class Player {
 	}
 	
 	public void reset() {
-		
 		this.call = null;
 		this.taken = 0;
 		this.calls.clear();
+		this.takes.clear();
 		this.scores.clear();
 		this.totalScore = 0;
+		this.totalScoreWithBonuses = 0;
 		this.cantCallNumer = null;
 		this.bWantsAll = false;
 		this.bonusMultiplier.clear();
@@ -73,8 +76,10 @@ public final class Player {
 		o.call = this.call;
 		o.taken = this.taken;
 		o.calls = this.calls;
+		o.takes = this.takes;
 		o.scores = this.scores;
 		o.totalScore = this.totalScore;
+		o.totalScoreWithBonuses = this.totalScoreWithBonuses;
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
 		o.bonusMultiplier = this.bonusMultiplier;
@@ -82,7 +87,7 @@ public final class Player {
 		return o;
 	}
 	
-	public Player(GameState state, String name, int position, Long id) {
+	public Player(GameState state, String name, int position, String id) {
 		this.state = state;
 		this.name = name;
 		this.position = position;
@@ -113,11 +118,11 @@ public final class Player {
 		this.name = name;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -230,24 +235,21 @@ public final class Player {
 		}
 		
 		//update results
-		totalScore += score;
 		calls.add(call);
+		takes.add(taken);
 		scores.add(score);
 		
 		//calculate bonuses
-		calculateBonuses();
-		if (calls.size() == 4) {
-			
+		if (calls.size() == 4 || calls.size() == 20) {
+			totalScore = totalScoreWithBonuses + calculateBonuses(8);
+			totalScoreWithBonuses = totalScore;
 		}
-		else if (calls.size() == 12) {
-		
+		else if (calls.size() == 12 || calls.size() == 24) {
+			totalScore = totalScoreWithBonuses + calculateBonuses(4);
+			totalScoreWithBonuses = totalScore;
 		}
-		else if (calls.size() == 20) {
-			
-		}
-		else if (calls.size() == 24) {
-			
-		}
+		//else uncomment when done
+			totalScore += score;
 		
 		//reset play 
 		taken = 0;
@@ -255,10 +257,32 @@ public final class Player {
 		call = null;
 		cantCallNumer = null;
 	}
-
-	private void calculateBonuses() {
-		// TODO Auto-generated method stub
+	
+	protected static boolean isBonusRoundForPlayer(Player p) {
 		
+		int n = 0;
+		
+		if (p.calls.size() == 4 || p.calls.size() == 20) {
+			n=8;
+		}
+		else if (p.calls.size() == 12 || p.calls.size() == 24) {
+			n=4;
+		}
+		
+		for (int i = p.calls.size(); i > p.calls.size() - n; i--) {
+			if(p.calls.get(i-1) != p.takes.get(i-1))
+				return false;
+		}
+		
+		return true;
+	}
+
+	private int calculateBonuses(int n) {
+		int score = 0;
+		//populate
+		//bonusMultiplier = 
+		
+		return score;
 	}
 		
 }

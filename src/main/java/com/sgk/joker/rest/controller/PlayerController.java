@@ -17,9 +17,24 @@ import com.sgk.joker.rest.model.Status;
 public class PlayerController {
 	
 	static private GameState state = new GameState();
+	
+	@GetMapping("/testHand")
+	public String testHand(@RequestParam(value = "cards") int[] cards, 
+						 @RequestParam(value = "roundNumber") Integer roundNumber) {
+		state.assignCards(false, cards, roundNumber);
+		state.setStatus(Status.DEALT);
+		return state.getTableId();
+	}
+	
+	@GetMapping("/testPrevHand")
+	public String testPrevHand() {
+		state.assignCards(true, null, null);
+		state.setStatus(Status.DEALT);
+		return state.getTableId();
+	}
 
 	@GetMapping("/newTable")
-	public Long newTable(@RequestParam(value = "name") String name) {
+	public String newTable(@RequestParam(value = "name") String name) {
 		state.reset(name);
 		return state.getTableId();
 	}
@@ -30,7 +45,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/startGame")
-	public PlayerState startGame(@RequestParam(value = "playerId") long playerId) {
+	public PlayerState startGame(@RequestParam(value = "playerId") String playerId) {
 		if(!state.isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
@@ -47,21 +62,21 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/setKozyr")
-	public PlayerState setKozyr(@RequestParam(value = "playerId") long playerId, 
+	public PlayerState setKozyr(@RequestParam(value = "playerId") String playerId, 
 								@RequestParam(value = "kozyrSuite") CardSuite kozyrSuite) {
 		state.setKozyr(playerId, kozyrSuite);
 		return state.getPlayerState(playerId);
 	}
 	
 	@GetMapping("/getPlayersState")
-	public PlayerState getState(@RequestParam(value = "playerId") long playerId) {
+	public PlayerState getState(@RequestParam(value = "playerId") String playerId) {
 		
 		return state.getPlayerState(playerId);
 	}	
 	
 	
 	@GetMapping("/call")
-	public PlayerState call(@RequestParam(value = "playerId") long playerId, 
+	public PlayerState call(@RequestParam(value = "playerId") String playerId, 
 						   @RequestParam(value = "wantQty") int wantQty) {
 
 		state.call(playerId, wantQty);
@@ -70,7 +85,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/action")
-	public PlayerState action(@RequestParam(value = "playerId") long playerId, 
+	public PlayerState action(@RequestParam(value = "playerId") String playerId, 
 							  @RequestParam(value = "cardId") int cardId, 
 							  @RequestParam(value = "jokerAction", required = false) JokerAction jokerAction /*0-7*/) {
 
@@ -80,7 +95,7 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/reaction")
-	public PlayerState reaction(@RequestParam(value = "playerId") long playerId, 
+	public PlayerState reaction(@RequestParam(value = "playerId") String playerId, 
 						   		@RequestParam(value = "cardId") int cardId, 
 						   		@RequestParam(value = "jokerReaction", required = false) JokerReaction jokerReaction /*0-1*/) {
 		

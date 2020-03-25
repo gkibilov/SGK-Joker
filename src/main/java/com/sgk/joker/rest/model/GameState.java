@@ -13,10 +13,13 @@ public class GameState {
 	
 	int version = 0;
 	
-	private long tableId;
+	private String tableId;
 	private String tableName;
 	
 	private int roundNumber = 0;
+	
+	private int prevRoundNumber = 0;
+	private int [] prevAssignment = null;		
 	
 	private int numCards = 0;
 	
@@ -27,7 +30,7 @@ public class GameState {
 	private Status status = Status.NOT_STARTED;
 	
 	//private List<Player> players = new ArrayList<Player>();
-	private Map<Long, Player> players = new HashMap<Long, Player>();
+	private Map<String, Player> players = new HashMap<String, Player>();
 	
 	private PlayState currentPlay = new PlayState();
 	
@@ -39,11 +42,11 @@ public class GameState {
 		this.version = version;
 	}
 	
-	public long getTableId() {
+	public String getTableId() {
 		return tableId;
 	}
 
-	public void setTableId(long tableId) {
+	public void setTableId(String tableId) {
 		this.tableId = tableId;
 	}
 
@@ -83,8 +86,8 @@ public class GameState {
 		return actingPlayerPosition;
 	}
 
-	public boolean isValidPlayer(long id) {
-		return players.containsKey(id);
+	public boolean isValidPlayer(String playerId) {
+		return players.containsKey(playerId);
 	}
 	
 	public int getNumCards() {
@@ -105,7 +108,7 @@ public class GameState {
 		return currentPlay == null ? null : currentPlay.getKozyr();
 	}
 	
-	public void setKozyr(long playerId, CardSuite kozyr) {
+	public void setKozyr(String playerId, CardSuite kozyr) {
 		if (players.get(playerId).getPosition() != actingPlayerPosition)
 			throw new IllegalStateException("Not your turn to call the suite!");
 		this.currentPlay.setKozyr(kozyr);
@@ -120,6 +123,7 @@ public class GameState {
 		
 		//full reset
 		if(tableName != null) {
+			this.tableId = ((Long)random.nextLong()).toString();
 			players.clear();
 		}
 		else {
@@ -142,7 +146,7 @@ public class GameState {
 		this.status = Status.STARTED;
 	}
 
-	public Long addPlayer(String name) {
+	public String addPlayer(String name) {
 		if (players.size() >= 4)
 			throw new IllegalStateException("Can not have more than 4 players, sorry!");
 		for (Player p: players.values()) {
@@ -150,7 +154,7 @@ public class GameState {
 				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
 		}
 				
-		long id = random.nextLong();
+		String id = ((Long)random.nextLong()).toString();
 		
 		players.put(id, new Player(this, name, players.size() + 1, id));
 		
@@ -165,13 +169,27 @@ public class GameState {
 			currentTurnPosition = 1;
 	}
 	
-	public boolean isPlayersTurn(long id) {
+	public boolean isPlayersTurn(String id) {
 		return players.get(id).getPosition() == currentTurnPosition;
 	}
-
+	
 	public void assignCards() {
+		assignCards(false, null, null);
+	}
+
+	public void assignCards(boolean revert, int c[], Integer rn) {
 		
-		roundNumber++;
+		if(revert) {
+			rn = this.prevRoundNumber;
+			c = this.prevAssignment;
+		}
+		
+		if(rn == null) {
+			prevRoundNumber = roundNumber;
+			roundNumber++;
+		}
+		else
+			roundNumber = rn;
 		
 		currentPlay.reset();
 		
@@ -180,10 +198,14 @@ public class GameState {
 		
 		this.currentPlay.setKozyr(null);
 		
-		int[] c = new int[36];
-		for (int i = 0; i<36; i++)
-			c[i]=i+1;
-		shuffle(c);
+		
+		if(c == null) {
+			c = new int[36];
+			for (int i = 0; i<36; i++)
+				c[i]=i+1;
+			shuffle(c);
+		}
+		this.prevAssignment = c;
 		
 		if (roundNumber <= 8)
 			numCards = roundNumber;
@@ -220,13 +242,13 @@ public class GameState {
 		array[j] = temp;
 	}
 	
-	public PlayerState getPlayerState(long id) {
+	public PlayerState getPlayerState(String id) {
 		if(!isValidPlayer(id)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
 		return new PlayerState (players.get(id), this);
 	}
-	public List<Player> getOpponents(long id) {
+	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();
 		
 		for (Player p : players.values()) {
@@ -242,7 +264,7 @@ public class GameState {
 		return players.size() == 4;
 	}
 
-	public void call(long playerId, int wantQty) {
+	public void call(String playerId, int wantQty) {
 		
 		if(!isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
@@ -298,7 +320,7 @@ public class GameState {
 		lp.setCantCallNumer(this.numCards - wants);
 	}
 
-	private void validateCall(long playerId, int wantQty) {
+	private void validateCall(String playerId, int wantQty) {
 		if(wantQty < 0 || wantQty > numCards) {
 			throw new IllegalStateException("Please call between 0 and " + numCards);
 		}
@@ -308,7 +330,7 @@ public class GameState {
 		}
 	}
 
-	public void action(long playerId, int cardId, JokerAction jokerAction) {
+	public void action(String playerId, int cardId, JokerAction jokerAction) {
 		if(!isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
@@ -337,7 +359,7 @@ public class GameState {
 		version++;		
 	}
 
-	public void react(long playerId, int cardId, JokerReaction jokerReaction) {
+	public void react(String playerId, int cardId, JokerReaction jokerReaction) {
 		if(!isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
@@ -388,7 +410,7 @@ public class GameState {
 		version++;		
 	}
 
-	private void validateReaction(long playerId, int cardId) {
+	private void validateReaction(String playerId, int cardId) {
 	
 		Card rCard = Card.cardMap.get(cardId);
 		
@@ -419,6 +441,15 @@ public class GameState {
 		for (Player p : players.values()) {
 			p.calculateHandResult();
 		}	
+	}
+	
+	protected int NumOfBonusesThisRound() {
+		int numBonuses = 0;
+		for (Player p : players.values()) {
+			if (Player.isBonusRoundForPlayer(p))
+				numBonuses++;
+		}	
+		return numBonuses;
 	}
 
 }
