@@ -220,8 +220,8 @@ public class GameState {
 				p.addCard(c[counter++], j==1);
 		}
 		
-		if(counter <= 33) {
-			Card kk = new Card(counter);
+		if(counter < 36) {
+			Card kk = new Card(c[counter]);
 			this.currentPlay.setKozyr(kk.getSuite());
 		}	
 		
