@@ -146,12 +146,15 @@ public class GameState {
 		this.status = Status.STARTED;
 	}
 
-	public String addPlayer(String name) {
+	public synchronized String addPlayer(String name, Integer pos) {
 		if (players.size() >= 4)
 			throw new IllegalStateException("Can not have more than 4 players, sorry!");
 		for (Player p: players.values()) {
 			if (p.getName().equalsIgnoreCase(name))
 				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
+		
+			if (pos != null && p.getPosition() == pos.intValue())
+				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already is occupying position " + pos); 		
 		}
 				
 		//generate unique id
@@ -160,7 +163,7 @@ public class GameState {
 			id = ((Long)random.nextLong()).toString();
 		}
 		
-		players.put(id, new Player(this, name, players.size() + 1, id));
+		players.put(id, new Player(this, name, pos != null ? pos : players.size() + 1, id));
 		
 		version++;
 		
