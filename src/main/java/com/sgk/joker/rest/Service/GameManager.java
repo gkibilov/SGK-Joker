@@ -16,11 +16,11 @@ public class GameManager {
 	
 	static int MAX_GAMES = 10;
 	//static private Map<String, GameState> games = new ConcurrentHashMap<String, GameState>();
-	static private Cache<Object, Object> games = CacheBuilder.newBuilder()
+	static private Cache<String, Object> games = CacheBuilder.newBuilder()
  		    										.maximumSize(10)
  		    										.expireAfterAccess(5, TimeUnit.MINUTES).build();
 	
-	static private Cache<Object, Object> expiredGames = CacheBuilder.newBuilder()
+	static private Cache<String, Object> expiredGames = CacheBuilder.newBuilder()
  		    												.maximumSize(10)
  		    												.expireAfterAccess(1, TimeUnit.MINUTES).build();
 	
@@ -30,7 +30,7 @@ public class GameManager {
 		if (games.size() >= 10)
 			throw new IllegalStateException("Max number of games is running, please try again later!");
 		
-		String gameId = ((Long)random.nextLong()).toString();
+		String gameId = ((Integer)random.nextInt()).toString();
 		
 		GameState game = new GameState();
 		game.setTableId(gameId);
@@ -40,13 +40,12 @@ public class GameManager {
 		return game;
 	}
 
-	@SuppressWarnings("deprecation")
 	public GameState getGame(String gameId) {
 		
-		GameState game = (GameState) games.getUnchecked(gameId);
+		GameState game = (GameState) games.getIfPresent(gameId);
 		
 		if (game == null) {
-			game = (GameState) expiredGames.getUnchecked(gameId);
+			game = (GameState) expiredGames.getIfPresent(gameId);
 		}
 		
 		if (game == null)
@@ -56,8 +55,7 @@ public class GameManager {
 	}
 
 	public void expireGame(String gameId) {
-		@SuppressWarnings("deprecation")
-		GameState game = (GameState) games.getUnchecked(gameId);
+		GameState game = (GameState) games.getIfPresent(gameId);
 		games.invalidate(gameId);		
 		expiredGames.put(gameId, game);		
 	}
