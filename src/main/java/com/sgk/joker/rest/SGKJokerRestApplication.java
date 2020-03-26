@@ -13,6 +13,3 @@ public class SGKJokerRestApplication {
     }
 
 }
-
-//http://localhost:8080/getState
-//http://localhost:8080/addPlayer?name=giak

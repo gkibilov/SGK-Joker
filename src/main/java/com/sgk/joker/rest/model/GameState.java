@@ -104,14 +104,14 @@ public class GameState {
 		this.roundNumber = roundNumber;
 	}
 	
-	private CardSuite getKozyr() {
+	private Card getKozyr() {
 		return currentPlay == null ? null : currentPlay.getKozyr();
 	}
 	
 	public void setKozyr(String playerId, CardSuite kozyr) {
 		if (players.get(playerId).getPosition() != actingPlayerPosition)
 			throw new IllegalStateException("Not your turn to call the suite!");
-		this.currentPlay.setKozyr(kozyr);
+		this.currentPlay.setKozyr(new Card(kozyr));
 		
 		version++;
 	}
@@ -222,7 +222,7 @@ public class GameState {
 		
 		if(counter < 36) {
 			Card kk = new Card(c[counter]);
-			this.currentPlay.setKozyr(kk.getSuite());
+			this.currentPlay.setKozyr(kk);
 		}	
 		
 		version++;
@@ -426,7 +426,9 @@ public class GameState {
 		if(actingSuite != rCard.suite) {
 			if(players.get(playerId).hasSuite(actingSuite)) {
 				throw new IllegalStateException("Please react with the acting suite, acting suite is: " + actingSuite);
-			} else if (currentPlay.getKozyr() != CardSuite.BEZ && rCard.suite != currentPlay.getKozyr() && players.get(playerId).hasSuite(currentPlay.getKozyr())) {
+			} else if (currentPlay.getKozyr().getSuite() != CardSuite.BEZ && 
+					   rCard.suite != currentPlay.getKozyr().getSuite() && 
+					   players.get(playerId).hasSuite(currentPlay.getKozyr().getSuite())) {
 				throw new IllegalStateException("Please react with kozyr!");				
 			}
 		}

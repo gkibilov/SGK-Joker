@@ -83,10 +83,20 @@ public final class Player {
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
 		o.bonusMultipliers = this.bonusMultipliers;
+		o.cards = generateDummyCards(p.getCards().size());
 		
 		return o;
 	}
 	
+	private List<Card> generateDummyCards(int size) {
+		List<Card> curds = new ArrayList<Card>();
+		int dg = 100;
+		do {
+			curds.add(new Card(dg--));
+		} while(size-- > 0);
+		return curds;
+	}
+
 	public Player(GameState state, String name, int position, String id) {
 		this.state = state;
 		this.name = name;

@@ -1,10 +1,12 @@
 package com.sgk.joker.rest.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sgk.joker.rest.Service.GameManager;
 import com.sgk.joker.rest.model.CardSuite;
 import com.sgk.joker.rest.model.GameState;
 import com.sgk.joker.rest.model.JokerAction;
@@ -16,36 +18,26 @@ import com.sgk.joker.rest.model.Status;
 @RestController
 public class PlayerController {
 	
-	static private GameState state = new GameState();
-	
-	@GetMapping("/testHand")
-	public String testHand(@RequestParam(value = "cards") int[] cards, 
-						 @RequestParam(value = "roundNumber") Integer roundNumber) {
-		state.assignCards(false, cards, roundNumber);
-		state.setStatus(Status.DEALT);
-		return state.getTableId();
-	}
-	
-	@GetMapping("/testPrevHand")
-	public String testPrevHand() {
-		state.assignCards(true, null, null);
-		state.setStatus(Status.DEALT);
-		return state.getTableId();
-	}
+   @Autowired
+   GameManager gameManager;
 
-	@GetMapping("/newTable")
-	public String newTable(@RequestParam(value = "name") String name) {
-		state.reset(name);
-		return state.getTableId();
+	@GetMapping("/newGame")
+	public String newTable(@RequestParam(value = "name") String name) {		
+		return gameManager.newGame(name).getTableId();
 	}
 	
 	@GetMapping("/addPlayer")
-	public PlayerState addPlayer(@RequestParam(value = "name") String name) {
+	public PlayerState addPlayer(@RequestParam(value = "gameId") String gameId, 
+								 @RequestParam(value = "name") String name) {
+		GameState state = gameManager.getGame(gameId);
 		return state.getPlayerState(state.addPlayer(name));
 	}
 	
 	@GetMapping("/startGame")
-	public PlayerState startGame(@RequestParam(value = "playerId") String playerId) {
+	public PlayerState startGame(@RequestParam(value = "gameId") String gameId,
+								 @RequestParam(value = "playerId") String playerId) {
+		
+		GameState state = gameManager.getGame(gameId);
 		if(!state.isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
@@ -62,44 +54,62 @@ public class PlayerController {
 	}
 	
 	@GetMapping("/setKozyr")
-	public PlayerState setKozyr(@RequestParam(value = "playerId") String playerId, 
+	public PlayerState setKozyr(@RequestParam(value = "gameId") String gameId,
+			 					@RequestParam(value = "playerId") String playerId, 
 								@RequestParam(value = "kozyrSuite") CardSuite kozyrSuite) {
+		
+		GameState state = gameManager.getGame(gameId);
+		
 		state.setKozyr(playerId, kozyrSuite);
 		return state.getPlayerState(playerId);
 	}
 	
 	@GetMapping("/getPlayersState")
-	public PlayerState getState(@RequestParam(value = "playerId") String playerId) {
-		
+	public PlayerState getState(@RequestParam(value = "gameId") String gameId,
+			 					@RequestParam(value = "playerId") String playerId) {
+		GameState state = gameManager.getGame(gameId);
 		return state.getPlayerState(playerId);
 	}	
 	
 	
 	@GetMapping("/call")
-	public PlayerState call(@RequestParam(value = "playerId") String playerId, 
-						   @RequestParam(value = "wantQty") int wantQty) {
+	public PlayerState call(@RequestParam(value = "gameId") String gameId,
+			 			    @RequestParam(value = "playerId") String playerId, 
+						    @RequestParam(value = "wantQty") int wantQty) {
 
+		GameState state = gameManager.getGame(gameId);
+		
 		state.call(playerId, wantQty);
 		
 		return state.getPlayerState(playerId);
 	}
 	
 	@GetMapping("/action")
-	public PlayerState action(@RequestParam(value = "playerId") String playerId, 
+	public PlayerState action(@RequestParam(value = "gameId") String gameId,
+			 				  @RequestParam(value = "playerId") String playerId, 
 							  @RequestParam(value = "cardId") int cardId, 
 							  @RequestParam(value = "jokerAction", required = false) JokerAction jokerAction /*0-7*/) {
 
+		GameState state = gameManager.getGame(gameId);
+		
 		state.action(playerId, cardId, jokerAction);
 		
 		return state.getPlayerState(playerId);
 	}
 	
 	@GetMapping("/reaction")
-	public PlayerState reaction(@RequestParam(value = "playerId") String playerId, 
+	public PlayerState reaction(@RequestParam(value = "gameId") String gameId,
+			 					@RequestParam(value = "playerId") String playerId, 
 						   		@RequestParam(value = "cardId") int cardId, 
 						   		@RequestParam(value = "jokerReaction", required = false) JokerReaction jokerReaction /*0-1*/) {
 		
-		 state.react(playerId, cardId, jokerReaction);
+		GameState state = gameManager.getGame(gameId);
+		
+		state.react(playerId, cardId, jokerReaction);
+		
+		if (state.getStatus() == Status.GAME_OVER) {
+			gameManager.expireGame(gameId);
+		}
 
 		return state.getPlayerState(playerId);
 	}

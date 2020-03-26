@@ -70,10 +70,17 @@ public class Card {
 	
 	public Card (int id) {
 		this.id = id;
-		this.suite = cardMap.get(id).getSuite();
-		this.type = cardMap.get(id).getType();
+		if (id <= 36)
+		{
+			this.suite = cardMap.get(id).getSuite();
+			this.type = cardMap.get(id).getType();
+		}
 	}
 	
+	public Card(CardSuite kozyr) {
+		this.id = -1;
+	}
+
 	public int getId() {
 		return id;
 	}
