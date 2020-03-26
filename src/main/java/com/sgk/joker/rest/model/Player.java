@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.sgk.joker.rest.model.GameState;
 
-public final class Player {
+public final class Player implements Comparable<Player>{
 	
 	private GameState state;
 
@@ -317,6 +317,13 @@ public final class Player {
 		}
 		
 		return score - khishtcounter*200;
+	}
+
+
+
+	@Override
+	public int compareTo(Player o) {
+		return this.id.compareTo(o.id);
 	}
 		
 }

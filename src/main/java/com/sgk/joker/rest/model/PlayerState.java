@@ -1,5 +1,6 @@
 package com.sgk.joker.rest.model;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.sgk.joker.rest.model.Player;
@@ -10,6 +11,7 @@ public class PlayerState {
 		this.player = player;
 		this.state = gameState;
 		this.opponents = gameState.getOpponents(player.getId());
+		Collections.sort(opponents);
 	}
 
 	public GameState getState() {
