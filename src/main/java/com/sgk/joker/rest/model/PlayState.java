@@ -5,17 +5,17 @@ import java.util.List;
 
 public class PlayState {
 	
-	private CardSuite kozyr = null;
+	private Card kozyr = null;
 	
 	private List<Action> actions = new ArrayList<Action>();
 	
 	Action winningAction = null;
 	
-	public CardSuite getKozyr() {
+	public Card getKozyr() {
 		return kozyr;
 	}
 
-	public void setKozyr(CardSuite kozyr) {
+	public void setKozyr(Card kozyr) {
 		this.kozyr = kozyr;
 	}
 
@@ -86,18 +86,18 @@ public class PlayState {
 			else {
 				//winning action is Joker wants
 				if (winningAction.isJokerActionWant()) {
-					if (lastAction.getSuite() == kozyr && getActingSuite() != kozyr) 
+					if (lastAction.getSuite() == kozyr.getSuite() && getActingSuite() != kozyr.getSuite()) 
 						winningAction = lastAction;
 					else return; 				
 				}			
 				//winning action is Joker take
 				else if (winningAction.isJokerActionTake()) {
-					if (lastAction.getSuite() == kozyr || lastAction.getSuite() == getActingSuite()) 
+					if (lastAction.getSuite() == kozyr.getSuite() || lastAction.getSuite() == getActingSuite()) 
 						winningAction = lastAction;
 					else return; 
 				}
 				//winning action is a kozyr
-				else if (lastAction.getSuite() == kozyr) {
+				else if (lastAction.getSuite() == kozyr.getSuite()) {
 						winningAction = lastAction;
 				}
 			}//end not same suite
