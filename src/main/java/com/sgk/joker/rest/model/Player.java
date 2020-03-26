@@ -73,6 +73,7 @@ public final class Player {
 		
 		Player o = new Player(p.state, p.name, p.position, null);
 
+		o.id = this.id;
 		o.call = this.call;
 		o.taken = this.taken;
 		o.calls = this.calls;
