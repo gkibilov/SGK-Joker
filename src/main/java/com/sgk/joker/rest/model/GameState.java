@@ -156,7 +156,7 @@ public class GameState {
 				
 		//generate unique id
 		String id = ((Long)random.nextLong()).toString();
-		while (!players.containsKey(id)) {
+		while (players.containsKey(id)) {
 			id = ((Long)random.nextLong()).toString();
 		}
 		

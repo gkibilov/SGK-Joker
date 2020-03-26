@@ -29,7 +29,7 @@ public class PlayerController {
 		return gameManager.newGame(name).getGameId();
 	}
 	
-	@GetMapping("/getAllGame")
+	@GetMapping("/getAllGames")
 	public List<GameInfo> getAllGames() {		
 		return gameManager.getAllGames();
 	}
