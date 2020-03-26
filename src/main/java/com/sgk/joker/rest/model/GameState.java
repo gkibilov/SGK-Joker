@@ -348,6 +348,7 @@ public class GameState {
 			jokerAction = null;
 		}
 		
+		//clear the table
 		this.currentPlay.getActions().clear();
 		
 		players.get(playerId).removeCard(cardId);
@@ -393,6 +394,10 @@ public class GameState {
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
 			calculatePlayResult();
 			status = Status.PLAY_DONE;
+			
+			//set new acting position based on who took the play
+			this.actingPlayerPosition = this.currentPlay.getWinningAction().getPlayerPosition();
+			this.setCurrentTurnPosition(this.actingPlayerPosition);
 		
 			//hand is over?
 			if(players.get(playerId).getCards().isEmpty()) {
