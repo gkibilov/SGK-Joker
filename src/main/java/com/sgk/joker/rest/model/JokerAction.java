@@ -9,5 +9,23 @@ public enum JokerAction {
 	public int getValue() {
 		return value;
 	}
+	
+	static public JokerAction getWantActionForSuite(CardSuite suite) {
+		
+		switch (suite) {
+		
+		case HART:
+			return WANT_HART;
+		case DIAMOND:
+			return WANT_DIAMOND;
+		case CLUB:
+			return WANT_CLUB;
+		case SPADE:
+			return WANT_SPADE;
+		default:
+			return WANT_HART;	
+		}
+
+	}
 }
 

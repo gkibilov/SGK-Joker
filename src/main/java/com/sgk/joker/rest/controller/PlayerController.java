@@ -100,6 +100,10 @@ public class PlayerController {
 
 		GameState state = gameManager.getGame(gameId);
 		
+		if ((cardId == 0 || cardId == 1) && jokerAction == null){
+			jokerAction = JokerAction.getWantActionForSuite(state.getCurrentPlay().getKozyr().getSuite());
+		}
+		
 		state.action(playerId, cardId, jokerAction);
 		
 		return state.getPlayerState(playerId);
@@ -112,6 +116,10 @@ public class PlayerController {
 						   		@RequestParam(value = "jokerReaction", required = false) JokerReaction jokerReaction /*0-1*/) {
 		
 		GameState state = gameManager.getGame(gameId);
+		
+		if ((cardId == 0 || cardId == 1) && jokerReaction == null){
+			jokerReaction = JokerReaction.TAKE;
+		}
 		
 		state.react(playerId, cardId, jokerReaction);
 		
