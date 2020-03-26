@@ -13,8 +13,8 @@ public class GameState {
 	
 	int version = 0;
 	
-	private String tableId;
-	private String tableName;
+	private String gameId;
+	private String gameName;
 	
 	private int roundNumber = 0;
 	
@@ -42,20 +42,20 @@ public class GameState {
 		this.version = version;
 	}
 	
-	public String getTableId() {
-		return tableId;
+	public String getGameId() {
+		return gameId;
 	}
 
-	public void setTableId(String tableId) {
-		this.tableId = tableId;
+	public void setGameId(String gameId) {
+		this.gameId = gameId;
 	}
 
-	public String getTableName() {
-		return tableName;
+	public String getGameName() {
+		return gameName;
 	}
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
+	public void setGameName(String gameName) {
+		this.gameName = gameName;
 	}
 	
 	public PlayState getCurrentPlay() {
@@ -123,7 +123,7 @@ public class GameState {
 		
 		//full reset
 		if(tableName != null) {
-			this.tableId = ((Long)random.nextLong()).toString();
+			this.gameId = ((Long)random.nextLong()).toString();
 			players.clear();
 		}
 		else {
@@ -154,7 +154,11 @@ public class GameState {
 				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
 		}
 				
+		//generate unique id
 		String id = ((Long)random.nextLong()).toString();
+		while (!players.containsKey(id)) {
+			id = ((Long)random.nextLong()).toString();
+		}
 		
 		players.put(id, new Player(this, name, players.size() + 1, id));
 		

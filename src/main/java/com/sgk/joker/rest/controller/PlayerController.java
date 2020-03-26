@@ -1,5 +1,7 @@
 package com.sgk.joker.rest.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sgk.joker.rest.Service.GameManager;
 import com.sgk.joker.rest.model.CardSuite;
+import com.sgk.joker.rest.model.GameInfo;
 import com.sgk.joker.rest.model.GameState;
 import com.sgk.joker.rest.model.JokerAction;
 import com.sgk.joker.rest.model.JokerReaction;
@@ -23,7 +26,12 @@ public class PlayerController {
 
 	@GetMapping("/newGame")
 	public String newTable(@RequestParam(value = "name") String name) {		
-		return gameManager.newGame(name).getTableId();
+		return gameManager.newGame(name).getGameId();
+	}
+	
+	@GetMapping("/getAllGame")
+	public List<GameInfo> getAllGames() {		
+		return gameManager.getAllGames();
 	}
 	
 	@GetMapping("/addPlayer")
