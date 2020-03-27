@@ -1,6 +1,7 @@
 package com.sgk.joker.rest.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -257,12 +258,43 @@ public class GameState {
 	}
 	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();
+		Integer curPlayerPos = null;
+		Player[] pa = new Player[4];
 		
 		for (Player p : players.values()) {
 			if(p.getId() != id) {
-				opponents.add(p.getOpponentCopy(p));
+				curPlayerPos = p.getPosition();
+				pa[p.getPosition()] = p;
 			}
 		}
+		
+		if(curPlayerPos != null) {
+			switch (curPlayerPos) {
+			case 1:
+				opponents.add(pa[2]);
+				opponents.add(pa[3]);
+				opponents.add(pa[4]);
+				break;
+			case 2:
+				opponents.add(pa[3]);
+				opponents.add(pa[4]);
+				opponents.add(pa[1]);
+				break;				
+			case 3:
+				opponents.add(pa[4]);
+				opponents.add(pa[2]);
+				opponents.add(pa[1]);
+				break;				
+			case 4:
+				opponents.add(pa[1]);
+				opponents.add(pa[2]);
+				opponents.add(pa[3]);
+				break;
+			}
+			
+		}
+		else
+			return Arrays.asList(pa);
 				
 		return opponents;
 	}
