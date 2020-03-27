@@ -213,6 +213,7 @@ public class GameState {
 				c[i]=i+1;
 			shuffle(c);
 		}
+		
 		this.prevAssignment = c;
 		
 		if (roundNumber <= 8)
@@ -388,7 +389,7 @@ public class GameState {
 		}
 		
 		//ignore bogus joker actions
-		if(jokerAction != null && cardId > 1) {		
+		if(jokerAction != null && cardId > 2) {		
 			jokerAction = null;
 		}
 		
@@ -420,7 +421,7 @@ public class GameState {
 		}
 		
 		//ignore bogus joker reaction
-		if(jokerReaction != null && cardId > 1) {		
+		if(jokerReaction != null && cardId > 2) {		
 			jokerReaction = null;
 		}
 		
