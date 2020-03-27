@@ -252,7 +252,7 @@ public final class Player {
 		scores.add(score);
 		
 		//calculate bonuses
-		if (calls.size() == 4 || calls.size() == 20) {
+		if (calls.size() == 8 || calls.size() == 20) {
 			totalScore = totalScoreWithBonuses + calculateBonuses(8);
 			totalScoreWithBonuses = totalScore;
 		}
