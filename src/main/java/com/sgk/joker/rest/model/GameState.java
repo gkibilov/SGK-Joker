@@ -259,6 +259,10 @@ public class GameState {
 	public List<Player> getOpponents(String id) {
 		List<Player> opponents = new ArrayList <Player> ();
 		Integer curPlayerPos = null;
+		
+		if (players.isEmpty())
+			return opponents;
+		
 		Player[] pa = new Player[4];
 		
 		for (Player p : players.values()) {
