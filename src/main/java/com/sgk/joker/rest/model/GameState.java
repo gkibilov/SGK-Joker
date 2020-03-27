@@ -268,7 +268,7 @@ public class GameState {
 			}
 		}
 		
-		if(pa.length == 3) {
+		if(!id.equalsIgnoreCase("ALL")) {
 			switch (curPlayerPos) {
 			case 1:
 				opponents.add(pa[1]);
