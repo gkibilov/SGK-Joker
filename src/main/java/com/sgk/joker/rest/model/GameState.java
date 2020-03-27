@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.junit.platform.commons.util.StringUtils;
+
 import com.sgk.joker.rest.model.Card;
 import com.sgk.joker.rest.model.Player;
 
@@ -147,7 +149,33 @@ public class GameState {
 		this.status = Status.STARTED;
 	}
 
-	public synchronized String addPlayer(String name, Integer pos) {
+	public synchronized String addPlayer(String name, String existingId, Integer pos) {
+		
+		//support for name update and position change
+		if(StringUtils.isNotBlank(existingId)) {
+			Player alterPlayer = null;
+			for (Player p: players.values()) {
+				if (existingId.equals(p.getId()))
+						alterPlayer = p;
+				else {
+					if (StringUtils.isNotBlank(name) && p.getName().equalsIgnoreCase(name))		
+						throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
+			
+					if (pos != null && p.getPosition() == pos.intValue())
+						throw new IllegalStateException("Player with the name '"+ p.getName() +"' already is occupying position " + pos); 		
+				}
+			}		
+			
+			if(alterPlayer != null) {
+				if(StringUtils.isNotBlank(name))
+					alterPlayer.setName(name);
+				if(pos != null)
+					alterPlayer.setPosition(pos);
+			}
+			
+			return existingId;			
+		}
+		
 		if (players.size() >= 4)
 			throw new IllegalStateException("Can not have more than 4 players, sorry!");
 		for (Player p: players.values()) {
@@ -157,7 +185,7 @@ public class GameState {
 			if (pos != null && p.getPosition() == pos.intValue())
 				throw new IllegalStateException("Player with the name '"+ p.getName() +"' already is occupying position " + pos); 		
 		}
-				
+		
 		//generate unique id
 		String id = ((Long)random.nextLong()).toString();
 		while (players.containsKey(id)) {

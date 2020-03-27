@@ -37,9 +37,10 @@ public class PlayerController {
 	@GetMapping("/addPlayer")
 	public PlayerState addPlayer(@RequestParam(value = "gameId") String gameId, 
 								 @RequestParam(value = "name") String name, 
+								 @RequestParam(value = "name", required = false) String id, //for changing name or position
 								 @RequestParam(value = "position", required = false) Integer pos) {
 		GameState state = gameManager.getGame(gameId);
-		return state.getPlayerState(state.addPlayer(name, pos));
+		return state.getPlayerState(state.addPlayer(name, id, pos));
 	}
 	
 	@GetMapping("/startGame")
