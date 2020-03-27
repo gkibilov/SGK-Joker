@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.junit.platform.commons.util.StringUtils;
+import org.springframework.util.StringUtils;
 
 import com.sgk.joker.rest.model.Card;
 import com.sgk.joker.rest.model.Player;
@@ -152,13 +152,13 @@ public class GameState {
 	public synchronized String addPlayer(String name, String existingId, Integer pos) {
 		
 		//support for name update and position change
-		if(StringUtils.isNotBlank(existingId)) {
+		if(!StringUtils.isEmpty(existingId)) {
 			Player alterPlayer = null;
 			for (Player p: players.values()) {
 				if (existingId.equals(p.getId()))
 						alterPlayer = p;
 				else {
-					if (StringUtils.isNotBlank(name) && p.getName().equalsIgnoreCase(name))		
+					if (!StringUtils.isEmpty(name) && p.getName().equalsIgnoreCase(name))		
 						throw new IllegalStateException("Player with the name '"+ p.getName() +"' already exists, please pick a different name!"); 
 			
 					if (pos != null && p.getPosition() == pos.intValue())
@@ -167,7 +167,7 @@ public class GameState {
 			}		
 			
 			if(alterPlayer != null) {
-				if(StringUtils.isNotBlank(name))
+				if(!StringUtils.isEmpty(name))
 					alterPlayer.setName(name);
 				if(pos != null)
 					alterPlayer.setPosition(pos);
