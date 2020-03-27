@@ -264,31 +264,31 @@ public class GameState {
 		for (Player p : players.values()) {
 			if(p.getId() != id) {
 				curPlayerPos = p.getPosition();
-				pa[p.getPosition()] = p;
+				pa[p.getPosition()-1] = p;
 			}
 		}
 		
 		if(curPlayerPos != null) {
 			switch (curPlayerPos) {
 			case 1:
+				opponents.add(pa[1]);
 				opponents.add(pa[2]);
 				opponents.add(pa[3]);
-				opponents.add(pa[4]);
 				break;
 			case 2:
+				opponents.add(pa[2]);
 				opponents.add(pa[3]);
-				opponents.add(pa[4]);
-				opponents.add(pa[1]);
+				opponents.add(pa[0]);
 				break;				
 			case 3:
-				opponents.add(pa[4]);
-				opponents.add(pa[2]);
+				opponents.add(pa[3]);
+				opponents.add(pa[0]);
 				opponents.add(pa[1]);
 				break;				
 			case 4:
+				opponents.add(pa[0]);
 				opponents.add(pa[1]);
 				opponents.add(pa[2]);
-				opponents.add(pa[3]);
 				break;
 			}
 			
