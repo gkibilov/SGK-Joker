@@ -14,6 +14,8 @@ import com.sgk.joker.rest.model.Player;
 
 public class GameState {
 	
+	Integer testNumCards = null;
+	
 	int version = 0;
 	
 	private String gameId;
@@ -227,6 +229,7 @@ public class GameState {
 		else
 			roundNumber = rn;
 		
+		
 		currentPlay.reset();
 		
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
@@ -250,6 +253,14 @@ public class GameState {
 			numCards = 9;
 		else
 			numCards = 21 - roundNumber;
+		
+		
+		//TODO remove after testing
+		if (testNumCards != null) {
+			numCards = testNumCards;
+			if (testNumCards < 9)
+				testNumCards++;
+		}
 		
 		int counter = 0;
 		for (int j = 1; j<=numCards; j++) {
@@ -532,6 +543,11 @@ public class GameState {
 				numBonuses++;
 		}	
 		return numBonuses;
+	}
+
+	public String setTestNumCards(Integer numCards) {
+		this.testNumCards = numCards;
+		return this.gameId;
 	}
 
 }

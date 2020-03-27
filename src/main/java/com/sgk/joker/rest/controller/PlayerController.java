@@ -23,6 +23,14 @@ public class PlayerController {
 	
    @Autowired
    GameManager gameManager;
+   
+   
+	@GetMapping("/setTestNumCards")
+	public String startGame(@RequestParam(value = "gameId") String gameId,
+								 @RequestParam(value = "numCards") Integer numCards) {	
+		GameState state = gameManager.getGame(gameId);
+		return state.setTestNumCards(numCards);	
+	}
 
 	@GetMapping("/newGame")
 	public String newTable(@RequestParam(value = "name") String name) {		
