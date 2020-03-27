@@ -1,6 +1,7 @@
 package com.sgk.joker.rest.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.sgk.joker.rest.model.GameState;
@@ -73,7 +74,7 @@ public final class Player {
 		
 		Player o = new Player(p.state, p.name, p.position, null);
 
-		o.id = this.id;
+		//o.id = this.id;
 		o.call = this.call;
 		o.taken = this.taken;
 		o.calls = this.calls;
@@ -85,7 +86,7 @@ public final class Player {
 		o.bWantsAll = this.bWantsAll;
 		o.bonusMultipliers = this.bonusMultipliers;
 		if(p.getCards() != null)
-			o.cards = generateDummyCards(p.getCards().size());
+			o.cards = generateDummyCards(p.cards.size());
 		
 		return o;
 	}
@@ -139,6 +140,7 @@ public final class Player {
 	}
 
 	public List<Card> getCards() {
+		Collections.sort(cards);
 		if (state.getNumCards() == 9 && state.getCurrentPlay().getKozyr() == null)
 			return cards.subList(0, 3);
 		else	

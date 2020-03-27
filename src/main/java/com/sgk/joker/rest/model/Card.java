@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.sgk.joker.rest.model.CardSuite;
 import com.sgk.joker.rest.model.CardType;
 
-public class Card {
+public class Card implements Comparable<Card>{
 	
 	
 	public static HashMap <Integer, Card> cardMap = new HashMap<Integer, Card>();
@@ -101,5 +101,10 @@ public class Card {
 	}
 	public void setType(CardType type) {
 		this.type = type;
+	}
+
+	@Override
+	public int compareTo(Card o) {
+		return this.id - o.id;
 	}
 }
