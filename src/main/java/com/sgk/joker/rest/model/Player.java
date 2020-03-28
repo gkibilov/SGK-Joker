@@ -94,7 +94,7 @@ public final class Player {
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
 		o.bonusMultipliers = this.bonusMultipliers;
-		if(p.getCards() != null)
+		if(p.cards != null)
 			o.cards = generateDummyCards(p.cards.size());
 		
 		return o;
