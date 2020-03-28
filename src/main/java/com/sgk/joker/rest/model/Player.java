@@ -33,6 +33,9 @@ public final class Player {
 	int totalScore = 0;
 	int totalScoreWithBonuses = 0;
 	
+	public void setPulkaScores(List<Integer> pulkaScores) {
+		//no op;
+	}
 	public List<Integer> getPulkaScores() {
 		return pulkaScores;
 	}
@@ -329,6 +332,9 @@ public final class Player {
 		return score - khishtcounter*200;
 	}
 	
+	public void setScoreTableDispalySize() {
+		//no op
+	}
 	public int getScoreTableDispalySize() {
 		int pulkaSize = 8;
 		if (this.state.getRoundNumber() > 8)
