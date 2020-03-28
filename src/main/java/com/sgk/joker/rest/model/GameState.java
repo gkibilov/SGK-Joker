@@ -307,7 +307,7 @@ public class GameState {
 		
 		for (Player p : players.values()) {
 			if(p.getId() != id) {
-				pa[p.getPosition()-1] = p;
+				pa[p.getPosition()-1] = p.getOpponentCopy(p);
 			}
 			else
 				curPlayerPos = p.getPosition();
