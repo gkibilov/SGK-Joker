@@ -100,13 +100,18 @@ public final class Player {
 		return o;
 	}
 	
-	private List<Card> generateDummyCards(int size) {
-		List<Card> curds = new ArrayList<Card>();
-		int dg = 100;
-		do {
-			curds.add(new Card(dg--));
-		} while(size-- > 0);
-		return curds;
+	static final List<Card> dummyCards = new ArrayList<Card>();
+	private static List<Card> generateDummyCards(int size) {
+		if(dummyCards.isEmpty()) {
+			synchronized(dummyCards)
+			{
+				int dg = 100;
+				while (dummyCards.size() < 9) {
+					dummyCards.add(new Card(dg--));
+				} 
+			}
+		}
+		return dummyCards.subList(0, size);
 	}
 
 	public Player(GameState state, String name, int position, String id) {

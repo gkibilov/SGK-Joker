@@ -79,6 +79,7 @@ public class Card implements Comparable<Card>{
 	
 	public Card(CardSuite kozyr) {
 		this.id = -1;
+		this.suite = kozyr;
 	}
 
 	public int getId() {
