@@ -6,10 +6,20 @@ import java.util.List;
 public class PlayState {
 	
 	private Card kozyr = null;
+	private Integer huntLevel = null;
 	
+
 	private List<Action> actions = new ArrayList<Action>();
 	
 	Action winningAction = null;
+	
+	public Integer getHuntLevel() {
+		return huntLevel;
+	}
+	
+	public void setHuntLevel(Integer huntLevel) {
+		this.huntLevel = huntLevel;
+	}
 	
 	public Card getKozyr() {
 		return kozyr;

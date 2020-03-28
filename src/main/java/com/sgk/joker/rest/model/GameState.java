@@ -384,6 +384,13 @@ public class GameState {
 		
 		//everyone made calls
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
+			
+			//calculate HuntLevel
+			int calls = 0;
+			for (Player p : this.players.values()) {
+				calls += p.getCall();
+			}
+			this.currentPlay.setHuntLevel(this.numCards - calls);
 			status = Status.CALLS_MADE;
 		}
 		
@@ -485,7 +492,8 @@ public class GameState {
 		
 			//hand is over?
 			if(players.get(playerId).getCards().isEmpty()) {
-				calculateHandResult();				
+				calculateHandResult();			
+				this.currentPlay.setHuntLevel(null);
 				//game over?
 				if(roundNumber == 24) {
 					status = Status.GAME_OVER;
