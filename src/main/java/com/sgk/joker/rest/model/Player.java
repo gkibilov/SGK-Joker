@@ -38,7 +38,7 @@ public final class Player {
 	}
 	
 	public void setPulkaScores(List<Integer> pulkaScores) {
-		this.pulkaScores = pulkaScores;
+		//noop
 	}
 
 	public boolean isbWantsAll() {
@@ -149,7 +149,7 @@ public final class Player {
 	}
 
 	public List<Card> getCards() {
-		Collections.sort(cards);
+		if (cards != null) Collections.sort(cards);
 		if (state.getNumCards() == 9 && state.getCurrentPlay().getKozyr() == null)
 			return cards.subList(0, 3);
 		else	

@@ -15,8 +15,8 @@ public class Card implements Comparable<Card>{
 		cardMap.put(2, new Card(2, CardSuite.BEZ, CardType.JOKER));
 		
 		//Spades
-		cardMap.put(3, new Card(3, CardSuite.SPADE, CardType.EIGHT));
-		cardMap.put(4, new Card(4, CardSuite.SPADE, CardType.SEVEN));
+		cardMap.put(3, new Card(3, CardSuite.SPADE, CardType.SEVEN));
+		cardMap.put(4, new Card(4, CardSuite.SPADE, CardType.EIGHT));
 		cardMap.put(5, new Card(5, CardSuite.SPADE, CardType.NINE));
 		cardMap.put(6, new Card(6, CardSuite.SPADE, CardType.TEN));
 		cardMap.put(7, new Card(7, CardSuite.SPADE, CardType.JACK));
