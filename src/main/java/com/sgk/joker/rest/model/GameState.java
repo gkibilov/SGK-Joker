@@ -484,6 +484,7 @@ public class GameState {
 		
 		//everyone made their play?
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
+			updateTakesForAllPalyers();
 			calculatePlayResult();
 			status = Status.PLAY_DONE;
 			
@@ -537,6 +538,12 @@ public class GameState {
 				break;
 			}
 		}		
+	}
+	
+	private void updateTakesForAllPalyers() {
+		for (Player p : players.values()) {
+			p.addTakes();
+		}
 	}
 	
 	private void calculateHandResult() {

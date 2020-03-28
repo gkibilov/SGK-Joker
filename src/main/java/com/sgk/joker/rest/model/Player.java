@@ -191,7 +191,10 @@ public final class Player {
 
 	public void setTaken(int taken) {
 		this.taken = taken;
-		takes.add(this.state.getRoundNumber()-1, taken);
+	}
+	
+	public void addTakes() {
+		this.takes.add(this.taken);
 	}
 
 	public List<Integer> getScores() {
@@ -266,7 +269,7 @@ public final class Player {
 		
 		//update results
 		//calls.add(call); moved to setCall 
-		//takes.add(taken); moved to setTaken 
+		//takes.add(taken); moved to react->updateTakesForAllPalyers->addTakes 
 		scores.add(score);
 		
 		//calculate bonuses
@@ -352,6 +355,5 @@ public final class Player {
 			pulkaSize = 4;
 		
 		return pulkaSize;		
-	}
-		
+	}		
 }
