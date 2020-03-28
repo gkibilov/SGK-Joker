@@ -28,9 +28,14 @@ public final class Player {
 	private List<Integer> calls = new ArrayList<Integer>();	
 	private List<Integer> scores = new ArrayList<Integer>();	
 	private List<Integer> bonusMultipliers = new ArrayList<Integer>();	
+	private List<Integer> pulkaScores = new ArrayList<Integer>();	
 
 	int totalScore = 0;
 	int totalScoreWithBonuses = 0;
+	
+	public List<Integer> getPulkaScores() {
+		return pulkaScores;
+	}
 	
 	public boolean isbWantsAll() {
 		return bWantsAll;
@@ -168,6 +173,7 @@ public final class Player {
 
 	public void setCall(Integer call) {
 		this.call = call;
+		calls.set(this.state.getRoundNumber()-1, call);
 	}
 
 	public int getTaken() {
@@ -249,7 +255,7 @@ public final class Player {
 		}
 		
 		//update results
-		calls.add(call);
+		//calls.add(call); moved to setCall 
 		takes.add(taken);
 		scores.add(score);
 		
@@ -257,10 +263,12 @@ public final class Player {
 		if (calls.size() == 8 || calls.size() == 20) {
 			totalScore = totalScoreWithBonuses + calculateBonuses(8);
 			totalScoreWithBonuses = totalScore;
+			pulkaScores.add(totalScoreWithBonuses);
 		}
 		else if (calls.size() == 12 || calls.size() == 24) {
 			totalScore = totalScoreWithBonuses + calculateBonuses(4);
 			totalScoreWithBonuses = totalScore;
+			pulkaScores.add(totalScoreWithBonuses);
 		}
 		else
 			totalScore += score;
@@ -319,6 +327,18 @@ public final class Player {
 		}
 		
 		return score - khishtcounter*200;
+	}
+	
+	public int getScoreTableDispalySize() {
+		int pulkaSize = 8;
+		if (this.state.getRoundNumber() > 8)
+			pulkaSize = 4;
+		if (this.state.getRoundNumber() > 12)
+			pulkaSize = 8;
+		if (this.state.getRoundNumber() > 20)
+			pulkaSize = 4;
+		
+		return pulkaSize;		
 	}
 		
 }
