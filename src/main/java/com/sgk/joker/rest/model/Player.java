@@ -33,13 +33,14 @@ public final class Player {
 	int totalScore = 0;
 	int totalScoreWithBonuses = 0;
 	
-	public void setPulkaScores(List<Integer> pulkaScores) {
-		//no op;
-	}
 	public List<Integer> getPulkaScores() {
 		return pulkaScores;
 	}
 	
+	public void setPulkaScores(List<Integer> pulkaScores) {
+		this.pulkaScores = pulkaScores;
+	}
+
 	public boolean isbWantsAll() {
 		return bWantsAll;
 	}
@@ -332,7 +333,7 @@ public final class Player {
 		return score - khishtcounter*200;
 	}
 	
-	public void setScoreTableDispalySize() {
+	public void setScoreTableDispalySize(int val) {
 		//no op
 	}
 	public int getScoreTableDispalySize() {
