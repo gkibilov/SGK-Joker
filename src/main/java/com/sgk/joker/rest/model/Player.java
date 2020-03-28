@@ -191,6 +191,7 @@ public final class Player {
 
 	public void setTaken(int taken) {
 		this.taken = taken;
+		takes.add(this.state.getRoundNumber()-1, taken);
 	}
 
 	public List<Integer> getScores() {
@@ -265,7 +266,7 @@ public final class Player {
 		
 		//update results
 		//calls.add(call); moved to setCall 
-		takes.add(taken);
+		//takes.add(taken); moved to setTaken 
 		scores.add(score);
 		
 		//calculate bonuses
