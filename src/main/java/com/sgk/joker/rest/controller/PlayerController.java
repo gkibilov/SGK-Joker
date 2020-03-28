@@ -26,7 +26,7 @@ public class PlayerController {
    
    
 	@GetMapping("/setTestNumCards")
-	public String startGame(@RequestParam(value = "gameId") String gameId,
+	public String setTestNumCards(@RequestParam(value = "gameId") String gameId,
 								 @RequestParam(value = "numCards") Integer numCards) {	
 		GameState state = gameManager.getGame(gameId);
 		return state.setTestNumCards(numCards);	
