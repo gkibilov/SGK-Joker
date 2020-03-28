@@ -300,7 +300,8 @@ public class GameState {
 		List<Player> opponents = new ArrayList <Player> ();
 		Integer curPlayerPos = null;
 		
-		if (players.isEmpty())
+		//return empty list if this is the only player
+		if (players.size() < 2)
 			return opponents;
 		
 		Player[] pa = new Player[4];
