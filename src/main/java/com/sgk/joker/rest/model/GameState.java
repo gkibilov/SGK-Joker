@@ -106,7 +106,7 @@ public class GameState {
 		return roundNumber;
 	}
 	public void setRoundNumber(int roundNumber) {
-		this.roundNumber = roundNumber;
+		// noop this.roundNumber = roundNumber;
 	}
 	
 	private Card getKozyr() {

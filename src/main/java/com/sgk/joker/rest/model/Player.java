@@ -177,7 +177,7 @@ public final class Player {
 
 	public void setCall(Integer call) {
 		this.call = call;
-		calls.set(this.state.getRoundNumber()-1, call);
+		calls.add(this.state.getRoundNumber()-1, call);
 	}
 
 	public int getTaken() {
