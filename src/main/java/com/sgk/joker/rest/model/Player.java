@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.sgk.joker.rest.model.GameState;
 
 public final class Player {
+	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.rest.model.Player");
 	
 	private GameState state;
 
@@ -274,17 +279,19 @@ public final class Player {
 		
 		//calculate bonuses
 		if (calls.size() == 8 || calls.size() == 20) {
-			totalScore = totalScoreWithBonuses + calculateBonuses(8);
-			totalScoreWithBonuses = totalScore;
-			pulkaScores.add(totalScoreWithBonuses);
+			totalScoreWithBonuses += calculateBonuses(8);
+			totalScore = totalScoreWithBonuses;
+			pulkaScores.add(totalScore);
 		}
 		else if (calls.size() == 12 || calls.size() == 24) {
-			totalScore = totalScoreWithBonuses + calculateBonuses(4);
-			totalScoreWithBonuses = totalScore;
-			pulkaScores.add(totalScoreWithBonuses);
+			totalScoreWithBonuses += calculateBonuses(4);
+			totalScore = totalScoreWithBonuses;
+			pulkaScores.add(totalScore);
 		}
 		else
 			totalScore += score;
+		
+		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " Score: " + totalScore);
 		
 		//reset play 
 		taken = 0;
@@ -314,14 +321,11 @@ public final class Player {
 		else if (state.getNumOfBonusesThisRound(n) == 1)
 			bonusMultiplier = 0;
 		
-		//fill up bonusMultipliers with 1s, count -200s, find highest score index for bonus, 
-		int khishtcounter = 0;
+		//fill up bonusMultipliers with 1s, find highest score index for bonus, 
 		int highScoreIndex = -1;
 		int highestMadeScore = 100;//only consider made hands
 		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
 			bonusMultipliers.add(1);
-			if (scores.get(i) == 0) 
-				khishtcounter++;
 			if (i == scores.size()-1)
 				continue;
 			if(scores.get(i) >= highestMadeScore) {
@@ -339,7 +343,7 @@ public final class Player {
 			score += scores.get(i)*bonusMultipliers.get(i);
 		}
 		
-		return score - khishtcounter*200;
+		return score;
 	}
 	
 	public void setScoreTableDispalySize(int val) {
