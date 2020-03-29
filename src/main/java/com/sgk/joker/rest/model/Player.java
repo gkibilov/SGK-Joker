@@ -276,14 +276,17 @@ public final class Player {
 		//calls.add(call); moved to setCall 
 		//takes.add(taken); moved to react->updateTakesForAllPalyers->addTakes 
 		scores.add(score);
+		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " Score: " + score); 
 		
 		//calculate bonuses
 		if (calls.size() == 8 || calls.size() == 20) {
+			logger.info("Calculating bonuses 8 for Player: " + this.name + " Round  #" + this.state.getRoundNumber());
 			totalScoreWithBonuses += calculateBonuses(8);
 			totalScore = totalScoreWithBonuses;
 			pulkaScores.add(totalScore);
 		}
 		else if (calls.size() == 12 || calls.size() == 24) {
+			logger.info("Calculating bonuses for 4 Player: " + this.name + " Round  #" + this.state.getRoundNumber());
 			totalScoreWithBonuses += calculateBonuses(4);
 			totalScore = totalScoreWithBonuses;
 			pulkaScores.add(totalScore);
@@ -291,7 +294,9 @@ public final class Player {
 		else
 			totalScore += score;
 		
-		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " Score: " + totalScore);
+		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " Num Calls: " + calls.size() + " Num Takes: " + takes.size());
+		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " call: " + call + " taken: " + taken);
+		logger.info("Player: " + this.name + " Round  #" + this.state.getRoundNumber() + " Score: " + score + " Total Score " + totalScore);
 		
 		//reset play 
 		taken = 0;
