@@ -302,7 +302,11 @@ public class GameState {
 		
 		//return empty list if this is the only player
 		if (players.size() < 2)
+		{
+			if(id.equals("ALL"))
+				opponents.addAll(this.players.values());//return yourself
 			return opponents;
+		}
 		
 		Player[] pa = new Player[4];
 		
