@@ -458,7 +458,7 @@ public class GameState {
 		version++;		
 	}
 
-	public void react(String playerId, int cardId, JokerReaction jokerReaction) {
+	synchronized public void react(String playerId, int cardId, JokerReaction jokerReaction) {
 		if(!isValidPlayer(playerId)) {
 			throw new IllegalStateException("Not a valid player id!");
 		}
@@ -488,7 +488,7 @@ public class GameState {
 		
 		//everyone made their play?
 		if(this.currentTurnPosition == this.actingPlayerPosition) {
-			updateTakesForAllPalyers();
+
 			calculatePlayResult();
 			status = Status.PLAY_DONE;
 			
@@ -498,7 +498,10 @@ public class GameState {
 		
 			//hand is over?
 			if(players.get(playerId).getCards().isEmpty()) {
-				calculateHandResult();			
+				//calculate results table
+				updateTakesForAllPalyers();
+				calculateHandResult();		
+				
 				this.currentPlay.setHuntLevel(null);
 				//game over?
 				if(roundNumber == 24) {
