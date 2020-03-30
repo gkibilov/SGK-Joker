@@ -46,6 +46,7 @@ public class GameState {
 	//private List<Player> players = new ArrayList<Player>();
 	private Map<String, Player> players = new HashMap<String, Player>();
 	
+	private PlayState prevPlay = null;
 	private PlayState currentPlay = new PlayState();
 	
 	synchronized public List<String> getMessages() {
@@ -97,7 +98,10 @@ public class GameState {
 	}
 	
 	public PlayState getCurrentPlay() {
-		return currentPlay;
+		if(this.status == Status.PLAY_DONE)
+			return this.prevPlay;
+		else
+			return currentPlay;
 	}
 
 	public void setCurrentPlay(PlayState currentPlay) {
@@ -262,7 +266,7 @@ public class GameState {
 		else
 			roundNumber = rn;
 		
-		
+		this.prevPlay = new PlayState(currentPlay);
 		currentPlay.reset();
 		
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
@@ -545,7 +549,7 @@ public class GameState {
 				else {
 					//deal next hand
 					assignCards();
-					status =Status.DEALT;
+					status = Status.DEALT;
 				}
 			}
 		}

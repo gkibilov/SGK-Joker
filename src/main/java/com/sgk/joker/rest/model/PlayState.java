@@ -13,6 +13,16 @@ public class PlayState {
 	
 	Action winningAction = null;
 	
+	public PlayState(PlayState currentPlay) {
+		this.kozyr = currentPlay.kozyr;
+		this.huntLevel = currentPlay.huntLevel;
+		this.actions = new ArrayList<Action>(currentPlay.actions);
+		this.winningAction = currentPlay.winningAction; ;
+	}
+
+	public PlayState() {
+	}
+
 	public Integer getHuntLevel() {
 		return huntLevel;
 	}
