@@ -7,12 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
+import com.sgk.joker.rest.controller.PlayerController;
 import com.sgk.joker.rest.model.Card;
 import com.sgk.joker.rest.model.Player;
 
 public class GameState {
+	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.rest.model.GameState");
 	
 	Integer testNumCards = null;
 	
@@ -601,6 +606,81 @@ public class GameState {
 	public String setTestNumCards(Integer numCards) {
 		this.testNumCards = numCards;
 		return this.gameId;
+	}
+
+	
+	public void fastForward(PlayerController cntrl, Integer roundNumber) {
+		
+		if (this.status == Status.NOT_STARTED || this.status == Status.GAME_OVER) 
+			throw new IllegalStateException("You can only fast forward a started game! Current State is: " + this.status); 
+		
+		logger.info("Started Fast Forward at state: " + this.status);
+		
+		int iter = 0;
+		while (roundNumber > this.getRoundNumber()) {
+			
+			logger.info("Fast Forward iterration # " + iter++ + " State is '" + this.status + "' Round# " + this.getRoundNumber());
+			
+			for (Player p : this.players.values()) {
+				if (p.getPosition() != this.getCurrentTurnPosition())
+					continue;
+				
+				boolean bError = false;
+
+	
+				if (this.status == Status.DEALT) {
+					try {
+						if (this.getKozyr() == null) {
+							logger.info("Fast Forward iterration set kozyr");
+							cntrl.setKozyr(gameId, p.getId(), CardSuite.BEZ);
+						}
+	
+						cntrl.call(gameId, p.getId(), this.getNumCards()/2);
+						
+					} catch (Exception e)
+					{
+						bError = true;
+					}
+					if (bError)
+						logger.info("Fast Forward error making call");
+					else
+						logger.info("Fast Forward made call");
+					continue;
+				}		
+				
+				if(this.status == Status.CALLS_MADE || this.status == Status.PLAY_STARTED || this.status == Status.PLAY_DONE) {
+					//act-react
+					int cardIndex = 0;
+					do {
+						boolean actionMade = false;
+						bError = false;
+						try {
+							if((this.status == Status.CALLS_MADE || this.status == Status.PLAY_DONE) && p.getPosition() == this.getActingPlayerPosition()) {	
+								actionMade = true;
+								cntrl.action(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
+								logger.info("Fast Forward made action " + p.getName());
+							}
+							else if (p.getPosition() == this.currentTurnPosition) {
+									actionMade = true;
+									cntrl.reaction(gameId, p.getId(), p.getCards().get(cardIndex).getId(), null);
+									logger.info("Fast Forward made reaction " + p.getName());
+							}
+						} catch (Exception e) {
+							bError = true;
+							logger.info("Fast Forward action or reaction error " + p.getName());
+						}
+						cardIndex++;
+						
+						if(!actionMade)
+							logger.info("Fast Forward action or reaction skipped " + p.getName());
+
+					} while (bError);
+				}
+				
+			}//for players
+
+			
+		}//while roundNumber
 	}
 
 }

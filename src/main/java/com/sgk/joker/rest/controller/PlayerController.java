@@ -31,6 +31,20 @@ public class PlayerController {
 		GameState state = gameManager.getGame(gameId);
 		return state.setTestNumCards(numCards);	
 	}
+	
+	@GetMapping("/testFastForward")
+	public String testFastForward(@RequestParam(value = "gameId") String gameId,
+									@RequestParam(value = "roundNumber") Integer roundNumber) {
+		GameState state = gameManager.getGame(gameId);
+		try {
+			state.fastForward(this, roundNumber);
+			return "OK";
+		}
+		catch (Exception e) {
+			return e.getMessage();
+		}
+		
+	}	
 
 	@GetMapping("/newGame")
 	public String newTable(@RequestParam(value = "name") String name) {		
@@ -89,6 +103,11 @@ public class PlayerController {
 		return state.getPlayerState(playerId);
 	}	
 	
+	@GetMapping("/getMessages")
+	public List<String> getMessages(@RequestParam(value = "gameId") String gameId) {
+		GameState state = gameManager.getGame(gameId);
+		return state.getMessages();
+	}	
 	
 	@GetMapping("/call")
 	public PlayerState call(@RequestParam(value = "gameId") String gameId,
