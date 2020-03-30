@@ -35,8 +35,8 @@ public final class Player {
 	private List<Integer> bonusMultipliers = new ArrayList<Integer>();	
 	private List<Integer> pulkaScores = new ArrayList<Integer>();	
 
-	int totalScore = 0;
-	int totalScoreWithBonuses = 0;
+	private int totalScore = 0;
+	private int totalScoreWithBonuses = 0;
 	
 	public List<Integer> getPulkaScores() {
 		return pulkaScores;
@@ -99,6 +99,7 @@ public final class Player {
 		o.cantCallNumer = this.cantCallNumer;
 		o.bWantsAll = this.bWantsAll;
 		o.bonusMultipliers = this.bonusMultipliers;
+		o.pulkaScores = this.pulkaScores;
 		if(p.cards != null)
 			o.cards = generateDummyCards(p.cards.size());
 		
