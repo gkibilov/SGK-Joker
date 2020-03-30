@@ -103,10 +103,14 @@ public class PlayerController {
 		return state.getPlayerState(playerId);
 	}	
 	
-	@GetMapping("/getMessages")
-	public List<String> getMessages(@RequestParam(value = "gameId") String gameId) {
+	@GetMapping("/sendMessage")
+	public PlayerState sendMessage(@RequestParam(value = "gameId") String gameId,
+			    				   @RequestParam(value = "playerId") String playerId, 
+			    				   @RequestParam(value = "message") String message) {
 		GameState state = gameManager.getGame(gameId);
-		return state.getMessages();
+		PlayerState ps = state.getPlayerState(playerId);
+		state.addMessage(message);
+		return ps;
 	}	
 	
 	@GetMapping("/call")
