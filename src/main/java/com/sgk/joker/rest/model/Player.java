@@ -344,7 +344,7 @@ public final class Player {
 			bonusMultipliers.set(highScoreIndex, bonusMultiplier);
 		
 		//apply bonusMultiplier
-		for (int i = scores.size()-1; i > scores.size()-n; i--) {
+		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
 			score += scores.get(i)*bonusMultipliers.get(i);
 		}
 		

@@ -34,10 +34,38 @@ public class GameState {
 
 	private Status status = Status.NOT_STARTED;
 	
+	private List<Integer> cardNumbers = new ArrayList<Integer>();
+	private List<String> messages = new  ArrayList<String>();
+	
+
 	//private List<Player> players = new ArrayList<Player>();
 	private Map<String, Player> players = new HashMap<String, Player>();
 	
 	private PlayState currentPlay = new PlayState();
+	
+	synchronized public List<String> getMessages() {
+		return messages;
+	}
+	
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
+	}
+	
+	synchronized public void addMessage(String message) {
+		if (messages.size() > 100) {
+			messages.remove(0);
+		}
+		messages.add(message);
+	}
+	
+	
+	public List<Integer> getCardNumbers() {
+		return cardNumbers;
+	}
+	
+	public void setCardNumbers(List<Integer> cardNumbers) {
+		this.cardNumbers = cardNumbers;
+	}
 	
 	public int getVersion() {
 		return version;
@@ -261,6 +289,8 @@ public class GameState {
 			if (testNumCards < 9)
 				testNumCards++;
 		}
+		
+		cardNumbers.add(numCards);
 		
 		int counter = 0;
 		for (int j = 1; j<=numCards; j++) {
