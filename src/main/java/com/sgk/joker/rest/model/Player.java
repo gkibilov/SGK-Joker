@@ -37,6 +37,8 @@ public final class Player {
 
 	private int totalScore = 0;
 	private int totalScoreWithBonuses = 0;
+
+	private boolean isOpponent = false;
 	
 	public List<Integer> getPulkaScores() {
 		return pulkaScores;
@@ -89,6 +91,7 @@ public final class Player {
 		Player o = new Player(p.state, p.name, p.position, null);
 
 		//o.id = this.id;
+		o.isOpponent = true;
 		o.call = this.call;
 		o.taken = this.taken;
 		o.calls = this.calls;
@@ -160,11 +163,16 @@ public final class Player {
 	}
 
 	public List<Card> getCards() {
-		if (cards != null) Collections.sort(cards);
+		if(cards == null)
+			return null;
+		
 		if (state.getNumCards() == 9 && state.getCurrentPlay().getKozyr() == null)
-			return cards.subList(0, 3);
-		else	
-			return cards;
+			return cards.size() >= 3 ? cards.subList(0, 3) : cards;
+
+		if(!isOpponent)
+			Collections.sort(cards);	
+		
+		return cards;
 	}
 
 	public void setCards(List<Card> cards) {
