@@ -211,7 +211,7 @@ public class GameState {
 				if(pos != null)
 					alterPlayer.setPosition(pos);
 				
-				logger.info("Player '" + alterPlayer.getName() +"' resitted at position " +  alterPlayer.getPosition() + " with id: " + alterPlayer.getId() + " Game Id: " + this.gameId);
+				logger.info("Player '" + alterPlayer.getName() +"' resitted at position " +  alterPlayer.getPosition() + " with id: " + alterPlayer.getId() );
 			}
 			
 
@@ -239,7 +239,7 @@ public class GameState {
 		
 		version++;
 		
-		logger.info("Player '" + name +"' sitted at position " +  pos != null ? pos : players.size() + 1 + " with id: " + id);
+		logger.info("Player '" + name +"' sitted at position " +  (pos != null ? pos : players.size() + 1) + " with id: " + id+ " Game Id: " + this.gameId);
 		
 		return id;
 	}
