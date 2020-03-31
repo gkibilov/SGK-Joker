@@ -155,6 +155,9 @@ public class GameState {
 			throw new IllegalStateException("Not your turn to call the suite!");
 		this.currentPlay.setKozyr(new Card(kozyr));
 		
+		if(this.numCards == 9)
+			this.prevPlay.setKozyr(new Card(kozyr));
+		
 		version++;
 	}
 	
