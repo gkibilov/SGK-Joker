@@ -652,7 +652,7 @@ public class GameState {
 					continue;
 				}		
 				
-				if(this.status == Status.CALLS_MADE || this.status == Status.PLAY_STARTED || this.status == Status.PLAY_DONE) {
+				else if(this.status == Status.CALLS_MADE || this.status == Status.PLAY_STARTED || this.status == Status.PLAY_DONE) {
 					//act-react
 					int cardIndex = 0;
 					do {
