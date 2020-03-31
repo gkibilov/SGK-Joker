@@ -272,8 +272,9 @@ public class GameState {
 		else
 			roundNumber = rn;
 		
-		if(roundNumber > 1)
+		if(roundNumber > 1) {
 			this.prevPlay = new PlayState(currentPlay);
+		}
 		currentPlay.reset();
 		
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
@@ -314,10 +315,15 @@ public class GameState {
 				p.addCard(c[counter++], j==1);
 		}
 		
+		Card kk = null;
 		if(counter < 36) {
-			Card kk = new Card(c[counter]);
+			kk = new Card(c[counter]);
 			this.currentPlay.setKozyr(kk);
 		}	
+		
+		if(roundNumber > 1) {
+			this.prevPlay.setKozyr(kk);
+		}
 		
 		version++;
 	}
