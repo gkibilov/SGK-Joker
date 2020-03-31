@@ -337,20 +337,28 @@ public final class Player {
 		
 		//fill up bonusMultipliers with 1s, find highest score index for bonus, 
 		int highScoreIndex = -1;
-		int highestMadeScore = 100;//only consider made hands
+		int highestMadeScore = 50;//only consider made hands
+		boolean allPass = true;
 		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
+			
+			if(this.calls.get(i) != this.takes.get(i) || this.takes.get(i) != 0)
+				allPass = false;
+			
 			bonusMultipliers.add(1);
 			if (i == scores.size()-1)
 				continue;
-			if(scores.get(i) >= highestMadeScore) {
+			if(scores.get(i) >= highestMadeScore && this.calls.get(i) == this.takes.get(i)) {
 				highScoreIndex = i;
 				highestMadeScore = scores.get(i);
 			}
 		}
 		
 		//set bonusMultiplier
-		if(highScoreIndex >=0)
+		if(highScoreIndex >=0) {
+			if(allPass && bonusMultiplier == 2)
+				bonusMultiplier = 10;//bonus for all 0s is 500
 			bonusMultipliers.set(highScoreIndex, bonusMultiplier);
+		}
 		
 		//apply bonusMultiplier
 		for (int i = scores.size()-1; i >= scores.size()-n; i--) {
