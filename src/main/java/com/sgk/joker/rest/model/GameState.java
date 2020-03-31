@@ -98,7 +98,7 @@ public class GameState {
 	}
 	
 	public PlayState getCurrentPlay() {
-		if(this.status == Status.PLAY_DONE)
+		if(this.status == Status.PLAY_DONE || (this.status == Status.DEALT && (this.actingPlayerPosition == this.currentTurnPosition)))
 			return this.prevPlay;
 		else
 			return currentPlay;
