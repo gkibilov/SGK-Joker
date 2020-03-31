@@ -98,7 +98,7 @@ public class GameState {
 	}
 	
 	public PlayState getCurrentPlay() {
-		if(this.status == Status.PLAY_DONE || (this.status == Status.DEALT && (this.actingPlayerPosition == this.currentTurnPosition)))
+		if(prevPlay != null && this.status == Status.DEALT && this.actingPlayerPosition == this.currentTurnPosition)
 			return this.prevPlay;
 		else
 			return currentPlay;
@@ -272,7 +272,8 @@ public class GameState {
 		else
 			roundNumber = rn;
 		
-		this.prevPlay = new PlayState(currentPlay);
+		if(roundNumber > 1)
+			this.prevPlay = new PlayState(currentPlay);
 		currentPlay.reset();
 		
 		actingPlayerPosition = roundNumber%4 == 0 ? 4 : roundNumber%4;
