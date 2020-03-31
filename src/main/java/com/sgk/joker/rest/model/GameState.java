@@ -210,7 +210,11 @@ public class GameState {
 					alterPlayer.setName(name);
 				if(pos != null)
 					alterPlayer.setPosition(pos);
+				
+				logger.info("Player '" + alterPlayer.getName() +"' resitted at position " +  alterPlayer.getPosition() + " with id: " + alterPlayer.getId() + " Game Id: " + this.gameId);
 			}
+			
+
 			
 			return existingId;			
 		}
@@ -234,6 +238,8 @@ public class GameState {
 		players.put(id, new Player(this, name, pos != null ? pos : players.size() + 1, id));
 		
 		version++;
+		
+		logger.info("Player '" + name +"' sitted at position " +  pos != null ? pos : players.size() + 1 + " with id: " + id);
 		
 		return id;
 	}
@@ -626,15 +632,17 @@ public class GameState {
 			logger.info("Fast Forward iterration # " + iter++ + " State is '" + this.status + "' Round# " + this.getRoundNumber());
 			
 			for (Player p : this.players.values()) {
+				if(roundNumber == this.getRoundNumber())
+					break;
+				
 				if (p.getPosition() != this.getCurrentTurnPosition())
 					continue;
 				
 				boolean bError = false;
-
 	
 				if (this.status == Status.DEALT) {
-					try {
-						if (this.getKozyr() == null) {
+					try {						
+						if (this.getKozyr() == null) {							
 							logger.info("Fast Forward iterration set kozyr");
 							cntrl.setKozyr(gameId, p.getId(), CardSuite.BEZ);
 						}
