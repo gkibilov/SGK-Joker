@@ -62,6 +62,8 @@ public class GameState {
 			messages.remove(0);
 		}
 		messages.add(message);
+
+		version++;
 	}
 	
 	
