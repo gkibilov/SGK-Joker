@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sgk.joker.rest.Service.GameManager;
 import com.sgk.joker.rest.model.CardSuite;
 import com.sgk.joker.rest.model.GameInfo;
 import com.sgk.joker.rest.model.GameState;
@@ -16,6 +15,7 @@ import com.sgk.joker.rest.model.JokerAction;
 import com.sgk.joker.rest.model.JokerReaction;
 import com.sgk.joker.rest.model.PlayerState;
 import com.sgk.joker.rest.model.Status;
+import com.sgk.joker.rest.service.GameManager;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

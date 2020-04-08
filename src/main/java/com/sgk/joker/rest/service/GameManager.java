@@ -1,10 +1,12 @@
-package com.sgk.joker.rest.Service;
+package com.sgk.joker.rest.service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import com.google.common.cache.Cache;
@@ -14,6 +16,8 @@ import com.sgk.joker.rest.model.GameState;
 
 @Service
 public class GameManager {
+	
+	protected final Log logger = LogFactory.getLog("com.sgk.joker.rest.service.GameManager");
 	
 	static int MAX_GAMES = 10;
 	//static private Map<String, GameState> games = new ConcurrentHashMap<String, GameState>();
@@ -41,6 +45,8 @@ public class GameManager {
 		game.setGameId(gameId);
 		game.setGameName(name);
 		games.put(gameId, game);
+		
+		logger.info("New game created with name: " + name);
 		
 		return game;
 	}
