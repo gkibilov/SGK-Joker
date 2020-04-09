@@ -21,7 +21,8 @@ JOKER_DIR="/home/ec2-user/Server"
 start_it() {
 	echo "starting $SERVICE_NAME ..."
     if [ ! -f $PID_PATH_NAME ]; then
-        nohup sudo java -jar $JAR_FILE --server.port=80 > $JOKER_DIR/joker.log 2>&1 &
+	cd $JOKER_DIR
+        nohup sudo java "-Dfile.encoding=UTF-8" -jar $JAR_FILE --server.port=80 > $JOKER_DIR/joker.log 2>&1 &
         echo $! > $PID_PATH_NAME
         echo "$SERVICE_NAME started ..."
     else
@@ -30,7 +31,8 @@ start_it() {
 		then
 			echo "$SERVICE_NAME is already running ..."
 		else
-			nohup sudo java -jar $JAR_FILE --server.port=80 > $JOKER_DIR/joker.log 2>&1 &
+			cd $JOKER_DIR
+			nohup sudo java "-Dfile.encoding=UTF-8" -jar $JAR_FILE --server.port=80 > $JOKER_DIR/joker.log 2>&1 &
         		echo $! > $PID_PATH_NAME
         		echo "$SERVICE_NAME started ..."
 		fi
